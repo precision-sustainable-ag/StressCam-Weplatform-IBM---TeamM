@@ -2,8 +2,9 @@ import React, { Component } from 'react';
 import { BrowserRouter as Router, Route } from 'react-router-dom';
 import Header from './components/layout/Header.js'
 import './App.css';
-import Todos from './components/Todos'
-import AddTodo from './components/AddTodo'
+
+import Home from './components/pages/Home'
+import DeviceCommands from './components/pages/DeviceCommands'
 import About from './components/pages/About'
 import {v4 as uuid} from 'uuid'
 
@@ -58,15 +59,9 @@ class App extends Component {
         <div className="App">
           <div className="container">
             <Header />
-            <Route exact path="/" render={props => (
-              <React.Fragment>
-                <AddTodo addTodo={this.addTodo} />
-                <Todos todos={this.state.todos} 
-                toggleTodo = {this.toggleTodo} delTodo={this.delTodo} />
-              </React.Fragment>
-            )} />
-
-            <Route path="/about" component={About} />
+            <Route exact path="/" component={Home} />
+            <Route exact path="/commands" component={DeviceCommands} />
+            <Route exact path="/about" component={About} />
             
           </div>
           

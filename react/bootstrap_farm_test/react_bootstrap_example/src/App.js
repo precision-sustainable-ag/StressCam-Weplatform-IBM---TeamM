@@ -1,10 +1,13 @@
 import React, { Component } from 'react';
 import { BrowserRouter as Router, Route } from 'react-router-dom';
 import Header from './components/layout/Header.js'
+import Footer from './components/layout/Footer.js'
 import './App.css';
-import Todos from './components/Todos'
-import AddTodo from './components/AddTodo'
+
+import Home from './components/pages/Home'
+import DeviceCommands from './components/pages/DeviceCommands'
 import About from './components/pages/About'
+import Jumbotron from './components/Jumbotron'
 import {v4 as uuid} from 'uuid'
 
 class App extends Component {  
@@ -56,20 +59,13 @@ class App extends Component {
     return (
       <Router>
         <div className="App">
-          <div className="container">
             <Header />
-            <Route exact path="/" render={props => (
-              <React.Fragment>
-                <AddTodo addTodo={this.addTodo} />
-                <Todos todos={this.state.todos} 
-                toggleTodo = {this.toggleTodo} delTodo={this.delTodo} />
-              </React.Fragment>
-            )} />
-
-            <Route path="/about" component={About} />
-            
-          </div>
-          
+            <Jumbotron />
+            <Route exact path="/" component={Home} />
+            <Route exact path="/commands" component={DeviceCommands} />
+            <Route exact path="/about" component={About} />
+            <br/>
+            <Footer />
         </div>
       </Router>
     );
