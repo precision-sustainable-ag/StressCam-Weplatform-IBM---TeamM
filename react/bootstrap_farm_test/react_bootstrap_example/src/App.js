@@ -57,17 +57,24 @@ class App extends Component {
   render(){
     // console.log(this.state.todos)
     return (
-      <Router>
-        <div className="App">
-            <Header />
-            <Jumbotron />
-            <Route exact path="/" component={Home} />
-            <Route exact path="/commands" component={DeviceCommands} />
-            <Route exact path="/about" component={About} />
-            <br/>
-            <Footer />
+      <div className="page-container">
+        <div className="content-wrap">
+          <Router>
+            <div className="App">
+                <Header />
+                <Jumbotron />
+                <Route exact path="/" component={Home} />
+                <Route exact path="/commands" component={DeviceCommands} />
+                <Route exact path="/about" component={About} />
+                <br/>
+                
+            </div>
+          </Router>
+          
+          
         </div>
-      </Router>
+        <Footer />
+      </div>
     );
   }
 }
