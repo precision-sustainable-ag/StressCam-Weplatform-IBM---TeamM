@@ -13,7 +13,7 @@
 import sys
 sys.path.append("/home/pi/.local/lib/python3.7/site-packages")
 sys.path.append("/home/pi")
-import PIL
+import PIL # python imaging library
 from PIL import Image
 import argparse
 import time
@@ -279,16 +279,18 @@ if __name__ == "__main__":
 
     street = os.listdir('/home/pi/Pictures/')
     i=0
+    
     while True:
         camera = PiCamera()  #Set camera parameters
-        camera.rotation = 180
-        camera.resolution = (imageResolutionX,imageResolutionY)
+        camera.rotation = 180 # camera position 
+        camera.resolution = (imageResolutionX,imageResolutionY) 
         camera.framerate = imageFrameRate
         currDate = datetime.datetime.now().strftime("%Y-%m-%d")
         currTime = datetime.datetime.now().strftime("%H:%M:%S")
         print("taking Image")
         camera.capture('/home/pi/images/' + currDate + '-' + currTime + imageFormat) #,resize=(imageWidth,imageHeight))
         camera.close()
+        
         #im = imread('/home/pi/images/'+currDate+currTime+imageFormat)
         #Uncomment the above line to use the ML model on the taken image
         file = '/home/pi/Pictures/' + street[i]
@@ -301,6 +303,7 @@ if __name__ == "__main__":
         print("allocating tensors")
         interpreter = tflite.Interpreter(model_path="/home/pi/converted_model.tflite")
         interpreter.allocate_tensors()
+        
         # Get input and output tensors.
         input_details = interpreter.get_input_details()
         output_details = interpreter.get_output_details()
@@ -312,6 +315,7 @@ if __name__ == "__main__":
         sleep(15)
         print("invoke interpreter")
         interpreter.invoke()
+        
         # The function `get_tensor()` returns a copy of the tensor data.
         # Use `tensor()` in order to get a pointer to the tensor.
         output_data = interpreter.get_tensor(output_details[0]['index'])
@@ -319,6 +323,7 @@ if __name__ == "__main__":
         print(results)
         waterStressLevel = int(np.argmax(results))
         percentConfident = results[waterStressLevel]*100
+        
         #Log file
         f =  open('/home/pi/waterStressLog.txt','a')
         #f.write(str(currDate)+str(currTime)+ " : " + str(waterStressLevel)+"\n")
@@ -328,12 +333,13 @@ if __name__ == "__main__":
         i= i+1 #Score next image
         print("Water Stress Level", waterStressLevel)
         print("Percent Confident", '%.2f' % percentConfident)
+        
         #CPU Temp
         cpuTemp = int(open('/sys/class/thermal/thermal_zone0/temp').read()) / 1e3 #CPU Temp
         cpu = gpz.CPUTemperature()
         cpuTemp = int(cpu.temperature)
-        print("Sensor Reading")
-        #Sensor Reading
+        
+        print("Sensor Reading") #Sensor Reading from veml7700
         i2c = busio.I2C(board.SCL, board.SDA, frequency=100000)
         #mlx = adafruit_mlx90614.MLX90614(i2c)
         veml7700 = adafruit_veml7700.VEML7700(i2c)
@@ -352,6 +358,7 @@ if __name__ == "__main__":
                 airTemp = 99 #mlx.ambient_temperature
             except OSError:
                 pass
+
         #Get wittyPi Temperature
         #with open('/home/pi/test.txt','w+') as fout:
         #    wittyPi = Popen(["sudo","/home/pi/wittyPi/wittyPi.sh"],stdout=fout)
@@ -360,7 +367,8 @@ if __name__ == "__main__":
         #    tempLine = linecache.getline("/home/pi/test.txt",8)
         #    wittyPiTemp = float(tempLine[25:30])
         #    fout.close()
-        data = {
+        
+        data = { # dict->json for publishing to cloud
             "DEVICE_ID": deviceId,
             "DEVICE_STATUS": "On",
             "LATITUDE": cameraLatitude,
