@@ -119,67 +119,73 @@ def commandProcessor(cmd):
         print("setting rotation")
         camera.rotation = 180
         print("setting resolution")
-        camera.resolution = (imageResolutionX,imageResolutionY)
+        camera.resolution = (imageResolutionX,imageResolutionY) #set camera resolution to 2592x1944
         camera.framerate = imageFrameRate
         print("setting date")
-        currDate = datetime.datetime.now().strftime("%Y-%m-%d")
-        currTime = datetime.datetime.now().strftime("%H:%M:%S")
+        currDate = datetime.datetime.now().strftime("%Y-%m-%d") #Set variable currDate to the datetime the image is taken
+        currTime = datetime.datetime.now().strftime("%H:%M:%S") #set variable currTime to the time the image is taken
         print("capturing image")
-        camera.capture('/home/pi/images/' + currDate +'-' + currTime + imageFormat) #, resize=(imageWidth, imageHeight))
-        camera.close()
+        camera.capture('/home/pi/images/' + currDate +'-' + currTime + imageFormat) #name the image in the format of Y-M-D-H-m-s in jpg, bmp, png
+        camera.close() # turn off camera to release the camera resourse
         #camera.stop_preview()
         print("Image Taken")
         sleep(5)
 
     # if command is resize image
     if(command == "resizeImage"):
-        if((int(cmd.data['Height'])<=1944) or (int(cmd.data['Width']<=2592))):
+        if((int(cmd.data['Height'])<=1944) or (int(cmd.data['Width']<=2592))): # only allow maximum resize of 2592 x 1944, else show error message
             imageHeight = int(cmd.data['Height'])
-            imageWidth = int(cmd.data['Width']) #Max 2592 x 1944
+            imageWidth = int(cmd.data['Width'])
             print("Images Resized to", imageWidth,"x", imageHeight)
         else:
             print("Images not resized, size too large")
 
     # if command is change send interval
+    # Web page shows button to change status update interval value in minuits
     if(command == "changeSendInterval"):
-        statusInterval = int(cmd.data['Interval'])*60
-        print("Interval Changed to:", statusInterval,"seconds")
+        statusInterval = int(cmd.data['Interval'])*60 # convert received minute interval to seconds
+        print("Interval Changed to:", statusInterval,"seconds") # display interval value in seconds
 
-    # if command is run script 
+    # if command is run script
     if(command == "runScript"):
-        script = cmd.data['scriptType']
+        script = cmd.data['scriptType'] # scriptType -- meta data send from the web page. See more in /Web Plateform Design Files/Commands.html
         print("Running Script"+ script)
+        #if script extendtion is '.py', then use python3, else use super-user linux command
         if(script[-2:]=='py'):
             call(['python3', '/home/pi'+script])
         else:
             call(['sudo','sh', '/home/pi'+script])
 
     # if command is send code data
+    ## what is this??? no search result in all files
     if(command == "sendCodeStatus"):
         print("sendCodeStatus")
 
     #if command is change schedule
     if(command == "changeSchedule"):
         print("changeSchedule")
-        startTimeStr = cmd.data['startTime']
-        endTimeStr = cmd.data['endTime']
-        startTime = datetime.datetime.strptime(startTimeStr,"%H:%M")
-        endTime = datetime.datetime.strptime(endTimeStr,"%H:%M")
-        onTimeHours = endTime.hour - startTime.hour
-        onTimeMin = endTime.minute - startTime.minute
+        startTimeStr = cmd.data['startTime'] #set startTimeStr to value from webpage
+        endTimeStr = cmd.data['endTime'] #set endTimeStr to value from webpage
+        startTime = datetime.datetime.strptime(startTimeStr,"%H:%M") # parse start time
+        endTime = datetime.datetime.strptime(endTimeStr,"%H:%M") # parse end time
+        onTimeHours = endTime.hour - startTime.hour # calculate how many hours are on
+        onTimeMin = endTime.minute - startTime.minute # calcualte how many minus are on
 
-
+    #calculate off time hours and minuits
+        # if minute vlaue is larger than zero, hour value need to be offset by 1.
         if(onTimeMin>0):
             offTimeHours = 23 - onTimeHours
             offTimeMin = 60- onTimeMin
         elif(onTimeMin == 0):
             offTimeHours = 24-onTimeHours
             offTimeMin = 0
-        else:
+        ## This is consfusing, the value of 'onTimeMin' an be smaller than 0?
+        else: ## seems wrong
             offTimeHours = 24 - onTimeHours
             onTimeHours = onTimeHours-1
             onTimeMin = 60 - abs(onTimeMin)
             offTimeMin = 60 - onTimeMin
+        # modify witttpi schedule
         f =  open('/home/pi/wittyPi/schedules/schedule.wpi','w')
         f.write('BEGIN   2015-08-01 '+ startTimeStr+':00'+ '\n')
         f.write('END     2025-07-31 23:59:59'+ '\n')
@@ -189,7 +195,7 @@ def commandProcessor(cmd):
 
     # if command is image format
     if(command == "imageFormat"):
-        print("imageFormat")#JPG or PNG or BMP
+        print("imageFormat") # JPG or PNG or BMP
         if(cmd.data['imageFormat'] == '.jpg'):
             imageFormat = '.jpg'
             print("Format changed to:"+imageFormat)
@@ -231,6 +237,7 @@ def commandProcessor(cmd):
        #     tempLine = linecache.getline("/home/pi/test.txt",8)
        #     wittyPiTemp = float(tempLine[25:30])
        #     fout.close()
+# set event data to be published
         data = {
             "DEVICE_ID": deviceId,
             "DEVICE_STATUS": "On",
@@ -245,37 +252,40 @@ def commandProcessor(cmd):
             "DATE_1":currDate,
             "TIME_1":currTime,
             #Add resolution
-
         }
+# publish client event data using IBM Watson IoT PY SDK
         client.publishEvent("status","json", data)
 
     # if command is change resolution
     if(command == "changeResolution"):
         imageResolutionX = int(cmd.data['imageResolutionX'])
         imageResolutionY = int(cmd.data['imageResolutionY'])
-        print("Resolution changed to:", imageResolutionX,"x", imageResolutionY)
+        print("Resolution changed to:", imageResolutionX,"x", imageResolutionY) # set image resolution to the desire value pulled from web request's meta data
 
 
     # if command is set interval
     if cmd.commandId == "setInterval":
+        #if user did not choose a interval value and hit setInterval
         if "interval" not in cmd.data:
             print("Error - command is missing required information: 'interval'")
         else:
+        #if user try to send string value that is not a integer
             try:
                 interval = int(cmd.data["interval"])
             except ValueError:
                 print("Error - interval not an integer: ", cmd.data["interval"])
     elif cmd.commandId == "print":
+        #if user send empty message
         if "message" not in cmd.data:
             print("Error - command is missing required information: 'message'")
         else:
             print(cmd.data["message"])
 
-
+#if the iot.py file is called
 if __name__ == "__main__":
     signal.signal(signal.SIGINT, interruptHandler)
 
-
+    #initialize a client
     client = None
     try:
         options = {
@@ -288,18 +298,21 @@ if __name__ == "__main__":
                 "token": token,
             }
         }
-        client = wiotp.sdk.device.DeviceClient(options)
-        client.commandCallback = commandProcessor
-        client.connect()
-    except Exception as e:
-        print(str(e))
-        sys.exit(1)
+        client = wiotp.sdk.device.DeviceClient(options) # create a client using preset values
+        client.commandCallback = commandProcessor # call client commandProcessor method
+        client.connect() # Use MQTT connection to IBM Watson IoT Plateform for publishing events
+    except Exception as e:         # store error message in 'e'
+        print(str(e))         #  printout error message
+        sys.exit(1)         # issue occured, program exit
     print("(Press Ctrl+C to disconnect)")
 
-    curr = datetime.datetime.now()
+    curr = datetime.datetime.now()     #set 'curr' to current time.
 
     street = os.listdir('/home/pi/Pictures/')
-    i=0
+
+    i=0 # 'i' is the image counter
+
+## Everything from here onward is the same as commandProcessor code.....??
     while True:
         camera = PiCamera()  #Set camera parameters
         camera.rotation = 180
@@ -312,8 +325,10 @@ if __name__ == "__main__":
         camera.close()
         #im = imread('/home/pi/images/'+currDate+currTime+imageFormat)
         #Uncomment the above line to use the ML model on the taken image
+        # set 'file' to image directory
         file = '/home/pi/Pictures/' + street[i]
         im = imread(file)
+        # suspend current thread for 5 seconds
         sleep(5)
         print("resizing image")
         im_final = resize(im,(200,200))#Model was trained on 200x200 images
