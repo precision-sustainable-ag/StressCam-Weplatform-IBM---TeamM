@@ -1,0 +1,8 @@
+
+*.cmd
+react/material_ui_farm_test/.eslintcache
+react/node_modules/.bin/jsesc
+react/node_modules/@babel/helper-function-name/package.json
+*.md
+*.js
+*.json

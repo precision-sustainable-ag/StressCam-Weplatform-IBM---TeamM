@@ -7,7 +7,7 @@ export default function About() {
         <AboutContainer>
             <React.Fragment className="fill">
                 <h1>About</h1>
-                <p>This is the Connected Farms app v1.0.0</p>
+                <p>This is the Connected Farms app v0.01</p>
             </React.Fragment>
         </AboutContainer>
         
@@ -15,7 +15,8 @@ export default function About() {
 }
 
 const AboutContainer = styled.div`
-    .fill{
+    .fill
+    {
         min-height: 100%;
         background-color: #bbb;
     }
