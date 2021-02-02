@@ -109,7 +109,10 @@ def commandProcessor(cmd):
     global currDate
     command = cmd.data['CommandType']
 
+    # print recieved command
     print("Command received: %s" % command)
+
+    # if command is take image
     if(command == "takeImage"):
         print("Camera Opening")
         camera = PiCamera()  #Set camera parameters
@@ -127,6 +130,8 @@ def commandProcessor(cmd):
         #camera.stop_preview()
         print("Image Taken")
         sleep(5)
+
+    # if command is resize image
     if(command == "resizeImage"):
         if((int(cmd.data['Height'])<=1944) or (int(cmd.data['Width']<=2592))):
             imageHeight = int(cmd.data['Height'])
@@ -134,9 +139,13 @@ def commandProcessor(cmd):
             print("Images Resized to", imageWidth,"x", imageHeight)
         else:
             print("Images not resized, size too large")
+
+    # if command is change send interval
     if(command == "changeSendInterval"):
         statusInterval = int(cmd.data['Interval'])*60
         print("Interval Changed to:", statusInterval,"seconds")
+
+    # if command is run script 
     if(command == "runScript"):
         script = cmd.data['scriptType']
         print("Running Script"+ script)
@@ -144,8 +153,12 @@ def commandProcessor(cmd):
             call(['python3', '/home/pi'+script])
         else:
             call(['sudo','sh', '/home/pi'+script])
+
+    # if command is send code data
     if(command == "sendCodeStatus"):
         print("sendCodeStatus")
+
+    #if command is change schedule
     if(command == "changeSchedule"):
         print("changeSchedule")
         startTimeStr = cmd.data['startTime']
@@ -173,6 +186,8 @@ def commandProcessor(cmd):
         f.write('ON      H'+ str(onTimeHours) + ' M' + str(onTimeMin)+ '\n')
         f.write('OFF     H'+ str(offTimeHours)+ ' M' + str(offTimeMin))
         f.close
+
+    # if command is image format
     if(command == "imageFormat"):
         print("imageFormat")#JPG or PNG or BMP
         if(cmd.data['imageFormat'] == '.jpg'):
@@ -186,10 +201,14 @@ def commandProcessor(cmd):
             print("Format changed to:"+imageFormat)
         else:
             print("Incompatible format")
+
+    # if command is change frames
     if(command == "changeFrames"):
         imageFrameRate =  int(cmd.data['frames'])
 
         print("Frame Rate changed to:", imageFrameRate)#range(10fps-30fps)
+
+    # if command is send data
     if(command == "sendData"):
         print("SensorData Published")
         try:
@@ -229,13 +248,15 @@ def commandProcessor(cmd):
 
         }
         client.publishEvent("status","json", data)
+
+    # if command is change resolution
     if(command == "changeResolution"):
         imageResolutionX = int(cmd.data['imageResolutionX'])
         imageResolutionY = int(cmd.data['imageResolutionY'])
         print("Resolution changed to:", imageResolutionX,"x", imageResolutionY)
 
 
-
+    # if command is set interval
     if cmd.commandId == "setInterval":
         if "interval" not in cmd.data:
             print("Error - command is missing required information: 'interval'")
