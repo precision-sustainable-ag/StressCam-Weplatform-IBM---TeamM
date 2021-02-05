@@ -36,40 +36,41 @@ export default function About() {
             direction="column"
             justify="center"
             display="inline-block"
+            alignItems="center"
             style={{ minHeight: '100vh' }}
             >
 
-                <Grid item lg={3}>
+                <Grid item lg={10}>
                     <SelectCamera/>
                 </Grid> 
-                <Grid item lg={3}>
+                <Grid item lg={10}>
                     <ChangeInterval/>
                 </Grid>  
-                <Grid item lg={3}>
+                <Grid item lg={10}>
                     <ChangeResolution/>
                 </Grid>  
-                <Grid item lg={3}>
+                <Grid item lg={10}>
                     <ChangeImageType/>
                 </Grid>  
-                <Grid item lg={3}>
+                <Grid item lg={10}>
                     <RunScript/>
                 </Grid>  
-                <Grid item lg={3}>
+                <Grid item lg={10}>
                     <SetFPS/>
                 </Grid>  
-                <Grid item lg={3}>
+                <Grid item lg={10}>
                     <TakeImage/>
                 </Grid>  
-                <Grid item lg={3}>
+                <Grid item lg={10}>
                     <SendData/>
                 </Grid>  
-                <Grid item lg={3}>
+                <Grid item lg={10}>
                     <GetStatus/>
                 </Grid>  
-                <Grid item lg={3}>
+                <Grid item lg={10}>
                     <ChangeSchedule/>
                 </Grid>  
-                <Grid item lg={3}>
+                <Grid item lg={10}>
                     <ChangeWidth/>
                 </Grid>       
             </Grid>
