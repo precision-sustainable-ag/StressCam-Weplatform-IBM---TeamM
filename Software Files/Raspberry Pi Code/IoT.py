@@ -32,7 +32,9 @@ import board
 import busio
 import adafruit_veml7700
 import adafruit_mlx90614
-from capture_image import capture_image, change_resolution
+from capture_image import capture_image
+from change_resolution import change_resolution
+from resize_image import resize_image
 
 from picamera import PiCamera
 from time import sleep
@@ -113,20 +115,20 @@ def commandProcessor(cmd):
     print("Command received: %s" % command)
 
     if(command == "changeResolution"):
-        change_resolution(int(cmd.data['imageResolutionX']), int(cmd.data['imageResolutionY']))
+        new_resolution = change_resolution(int(cmd.data['imageResolutionX']), int(cmd.data['imageResolutionY']))
+        imageHeight = new_resolution[imageResolutionX]
+        imageWidth = new_resolution[imageResolutionY]
 
     # if command is take image
-    if command == "takeImage"
+    if command == "takeImage":
         capture_image()
 
     # if command is resize image
-    if(command == "resizeImage"):
-        if((int(cmd.data['Height'])<=1944) or (int(cmd.data['Width']<=2592))): # only allow maximum resize of 2592 x 1944, else show error message
-            imageHeight = int(cmd.data['Height'])
-            imageWidth = int(cmd.data['Width'])
-            print("Images Resized to", imageWidth,"x", imageHeight)
-        else:
-            print("Images not resized, size too large")
+    if(command == "resizeImage" and int(cmd.data['Height'])<=1944 and int(cmd.data['Width']<=2592):
+        resize_image(int(cmd.data['Height'])<=1944) and (int(cmd.data['Width']<=2592)))
+    else:
+        print("Images not resized, size too large")
+
 
     # if command is change send interval
     # Web page shows button to change status update interval value in minuits
