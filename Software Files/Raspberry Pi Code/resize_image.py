@@ -1,6 +1,7 @@
 def resize_image(height, width):
-    imagesize = dict
-        imageHeight = int(cmd.data['Height'])
-        imageWidth = int(cmd.data['Width'])
+    image_size = {
+        "image_Height" : int(cmd.data['Height'])
+        "image_Width" : int(cmd.data['Width'])
+    }
         print("Images Resized to", imageWidth,"x", imageHeight)
         return imageHeight, imageWidth
