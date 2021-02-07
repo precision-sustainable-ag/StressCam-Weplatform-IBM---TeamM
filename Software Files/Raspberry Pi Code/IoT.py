@@ -18,7 +18,7 @@ from PIL import Image
 import argparse
 import time
 import os
-from subprocess import call
+from subprocess import run
 from subprocess import Popen
 import linecache
 
@@ -32,9 +32,7 @@ import board
 import busio
 import adafruit_veml7700
 import adafruit_mlx90614
-from capture_image import capture_image
-from change_resolution import change_resolution
-from resize_image import resize_image
+from commands import capture_image, resize_image, change_resolution, new_interval, run_script
 
 from picamera import PiCamera
 from time import sleep
@@ -52,8 +50,6 @@ import numpy as np
 
 
 ############Global Variables########################################
-imageWidth = 640
-imageHeight = 480
 imageResolutionX = 2592  #(2592,1944) (1920,1080)
 imageResolutionY = 1944
 imageFormat = '.jpg'
@@ -99,10 +95,6 @@ def interruptHandler(signal, frame):
 
 def commandProcessor(cmd):
     global statusInterval
-    global imageWidth
-    global imageHeight
-    global imageResolutionX
-    global imageResolutionY
     global imageFormat
     global imageFrameRate
     global waterStressLevel
@@ -116,35 +108,25 @@ def commandProcessor(cmd):
 
     if(command == "changeResolution"):
         new_resolution = change_resolution(int(cmd.data['imageResolutionX']), int(cmd.data['imageResolutionY']))
-        imageHeight = new_resolution[imageResolutionX]
-        imageWidth = new_resolution[imageResolutionY]
 
     # if command is take image
     if command == "takeImage":
         capture_image()
 
     # if command is resize image
-    if(command == "resizeImage" and int(cmd.data['Height'])<=1944 and int(cmd.data['Width']<=2592):
-        resize_image(int(cmd.data['Height'])<=1944) and (int(cmd.data['Width']<=2592)))
+    if command == "resizeImage" and int(cmd.data['Height'])<=1944 and int(cmd.data['Width'])<=2592:
+        New_image_size = resize_image(int(cmd.data['Height']), int(cmd.data['Width']))
     else:
         print("Images not resized, size too large")
-
 
     # if command is change send interval
     # Web page shows button to change status update interval value in minuits
     if(command == "changeSendInterval"):
-        statusInterval = int(cmd.data['Interval'])*60 # convert received minute interval to seconds
-        print("Interval Changed to:", statusInterval,"seconds") # display interval value in seconds
+        new_interval(int(cmd.data['Interval'])*60)
 
     # if command is run script
     if(command == "runScript"):
-        script = cmd.data['scriptType'] # scriptType -- meta data send from the web page. See more in /Web Plateform Design Files/Commands.html
-        print("Running Script"+ script)
-        #if script extendtion is '.py', then use python3, else use super-user linux command
-        if(script[-2:]=='py'):
-            call(['python3', '/home/pi'+script])
-        else:
-            call(['sudo','sh', '/home/pi'+script])
+        run_script(cmd.data['scriptType']) # scriptType -- meta data send from the web page. See more in /Web Plateform Design Files/Commands.html
 
     # if command is send code data
     ## what is this??? no search result in all files
@@ -245,12 +227,6 @@ def commandProcessor(cmd):
         }
 # publish client event data using IBM Watson IoT PY SDK
         client.publishEvent("status","json", data)
-
-    # if command is change resolution
-    if(command == "changeResolution"):
-        imageResolutionX = int(cmd.data['imageResolutionX'])
-        imageResolutionY = int(cmd.data['imageResolutionY'])
-        print("Resolution changed to:", imageResolutionX,"x", imageResolutionY) # set image resolution to the desire value pulled from web request's meta data
 
 
     # if command is set interval
