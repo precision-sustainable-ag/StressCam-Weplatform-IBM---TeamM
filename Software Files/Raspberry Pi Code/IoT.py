@@ -94,9 +94,7 @@ def interruptHandler(signal, frame):
 
 
 def commandProcessor(cmd):
-    global statusInterval
     global imageFormat
-    global imageFrameRate
     global waterStressLevel
     global data
     global currTime
@@ -115,14 +113,14 @@ def commandProcessor(cmd):
 
     # if command is resize image
     if command == "resizeImage" and int(cmd.data['Height'])<=1944 and int(cmd.data['Width'])<=2592:
-        New_image_size = resize_image(int(cmd.data['Height']), int(cmd.data['Width']))
+        new_image_size = resize_image(int(cmd.data['Height']), int(cmd.data['Width']))
     else:
         print("Images not resized, size too large")
 
     # if command is change send interval
     # Web page shows button to change status update interval value in minuits
     if(command == "changeSendInterval"):
-        new_interval(int(cmd.data['Interval'])*60)
+        new_status_interval = new_interval(int(cmd.data['Interval'])*60)
 
     # if command is run script
     if(command == "runScript"):
@@ -183,7 +181,6 @@ def commandProcessor(cmd):
     # if command is change frames
     if(command == "changeFrames"):
         imageFrameRate =  int(cmd.data['frames'])
-
         print("Frame Rate changed to:", imageFrameRate)#range(10fps-30fps)
 
     # if command is send data

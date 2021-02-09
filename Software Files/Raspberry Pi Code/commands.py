@@ -64,4 +64,3 @@ def run_script(script_type):
         else:
             run(['sudo','sh', '/home/pi'+ script_type])
 
-
