@@ -33,43 +33,42 @@ export default function About() {
             <Grid
             container
             spacing={0}
-            direction="column"
-            justify="center"
-            display="inline-block"
-            style={{ minHeight: '100vh' }}
-            >
-
-                <Grid item lg={3}>
+            alignContent="center" 
+            align = "center" 
+            justify = "center" 
+            alignItems = "center"
+            >                    
+                <Grid item lg={12} md={12} sm={12} xs={12}>
                     <SelectCamera/>
                 </Grid> 
-                <Grid item lg={3}>
+                <Grid item lg={3} md={4} sm={6} xs={12}>
                     <ChangeInterval/>
                 </Grid>  
-                <Grid item lg={3}>
+                <Grid item lg={3} md={4} sm={6} xs={12}>
                     <ChangeResolution/>
                 </Grid>  
-                <Grid item lg={3}>
+                <Grid item lg={3} md={4} sm={6} xs={12}>
                     <ChangeImageType/>
                 </Grid>  
-                <Grid item lg={3}>
+                <Grid item lg={3} md={4} sm={6} xs={12}>
                     <RunScript/>
                 </Grid>  
-                <Grid item lg={3}>
+                <Grid item lg={3} md={4} sm={6} xs={12}>
                     <SetFPS/>
                 </Grid>  
-                <Grid item lg={3}>
+                <Grid item lg={3} md={4} sm={6} xs={12}>
                     <TakeImage/>
                 </Grid>  
-                <Grid item lg={3}>
+                <Grid item lg={3} md={4} sm={6} xs={12}>
                     <SendData/>
                 </Grid>  
-                <Grid item lg={3}>
+                <Grid item lg={3} md={4} sm={6} xs={12}>
                     <GetStatus/>
                 </Grid>  
-                <Grid item lg={3}>
+                <Grid item lg={3} md={4} sm={6} xs={12}>
                     <ChangeSchedule/>
                 </Grid>  
-                <Grid item lg={3}>
+                <Grid item lg={3} md={4} sm={6} xs={12}>
                     <ChangeWidth/>
                 </Grid>       
             </Grid>

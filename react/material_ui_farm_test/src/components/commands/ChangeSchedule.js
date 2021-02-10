@@ -39,8 +39,7 @@ const useStyles = makeStyles({
   card: {
     backgroundColor: DefaultTheme.palette.background.default,
     color: DefaultTheme.palette.primary.contrastText,
-    minWidth: 275,
-    maxWidth: 600
+    minHeight: 160
   }
 });
 

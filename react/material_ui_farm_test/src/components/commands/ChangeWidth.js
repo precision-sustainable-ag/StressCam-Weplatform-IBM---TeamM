@@ -39,8 +39,7 @@ const useStyles = makeStyles({
   card: {
     backgroundColor: DefaultTheme.palette.background.default,
     color: DefaultTheme.palette.primary.contrastText,
-    minWidth: 275,
-    maxWidth: 600
+    minHeight: 160
   }
 });
 
@@ -56,10 +55,10 @@ export default function ChangeWidth() {
                 </Typography>
                 <Grid container spacing={3}>
                     <Grid item xs={6}>
-                        <TextField id="outlined-basic" label="Width" variant="outlined" />
+                        <TextField size="small" id="outlined-basic" label="Width" variant="outlined" />
                     </Grid>
                     <Grid item xs={6}>
-                        <TextField id="outlined-basic" label="Height" variant="outlined" />
+                        <TextField size="small" id="outlined-basic" label="Height" variant="outlined" />
                     </Grid>
                 </Grid>
                 
