@@ -1,19 +1,18 @@
 #!/usr/bin/python3
 import sys
-sys.path.append("/usr/lib/python3.7")
-sys.path.append("/usr/lib/python3/dist-packages")
-
+sys.path.append("/usr/local/lib/python3.7/dist-packages/tensorflow_core")
 from picamera import PiCamera
 from time import sleep
 
+import subprocess
+
 import datetime
 import gpiozero as gpz
-
-import subprocess
+import json
 
 from skimage.io import imread #read images
 from skimage.transform import resize
-from tensorflow import lite as tflite
+from tensorflow_core import lite as tflite
 import numpy as np
 
 import psutil
@@ -23,9 +22,8 @@ disk_percent_used = disk.percent
 disk_free = disk.free / 2**30
 
 from Hologram.HologramCloud import HologramCloud
-
-subprocess.call("sudo hologram modem connect",shell=True)
-credentials = {'devicekey':'MRVw4T*S'} #'6r)^]p]Q'} #Hologram device key from hologram.io
+subprocess.run("sudo hologram network connect", shell=True)
+credentials = {'devicekey':'a_jbDNcZ'} #'6r)^]p]Q'} #Hologram device key from hologram.io
 hologram = HologramCloud(credentials, network='cellular',authentication_type='csrpsk') #Connect to Hologram CLoud, change network to cellular to connect to LTE
 
 sum_RSSI = 0.0
@@ -40,7 +38,7 @@ currTime = curr.strftime("%H_%M_%S")
 camera.resolution=(2592,1944)
 #camera.rotation = 180
 camera.capture('/home/pi/images/' + curr.strftime("%d_%m_%Y_%H_%M_%S") + '.jpg')
-
+camera.close()
 #for i in range(num_samples):
 #    signal_strength = hologram.network.signal_strength
 #    print('Signal strength: ' + signal_strength)
@@ -54,7 +52,7 @@ camera.capture('/home/pi/images/' + curr.strftime("%d_%m_%Y_%H_%M_%S") + '.jpg')
 cpu = gpz.CPUTemperature()
 cpu_temp = cpu.temperature
 print("CPU Temperature:", cpu_temp)
-file = '/home/pi/imagesTest/002433.jpg'
+file = '/home/pi/Pictures/000006.jpg'
 im = imread(file)
 print("resizing image")
 im_final = resize(im,(200,200))#Model was trained on 200x200 images
@@ -91,13 +89,13 @@ data = {
             "DATE_1":currDate,
             "TIME_1":currTime,
             "SD":disk_percent_used,
-            "SD_free":disk_free,
-#            "Av_RSSI":sum_RSSI/num_samples,
-#            "Av_qual":sum_quality/num_samples,
+            "SD_free":disk_free
         }
-recv = hologram.sendMessage(data) # Send message to hologram cloud
+formatted_data = json.dumps(data, separators=(" ", ":"))
+recv = hologram.sendMessage(formatted_data) # Send message to hologram cloud
 print("Recieved Code:",recv)
 print("0 Means Succesful Transmission")
+subprocess.run("sudo hologram network disconnect", shell=True)
 sleep(20)
 
 
