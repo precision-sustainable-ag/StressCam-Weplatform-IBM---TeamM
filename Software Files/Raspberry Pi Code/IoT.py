@@ -18,7 +18,7 @@ from PIL import Image
 import argparse
 import time
 import os
-from subprocess import call
+from subprocess import run
 from subprocess import Popen
 import linecache
 
@@ -28,13 +28,10 @@ import signal
 import datetime
 import random
 import json
-import board
-import busio
-import adafruit_veml7700
-import adafruit_mlx90614
 
+import commands
+from commandProcessor import commandProcessor
 
-from picamera import PiCamera
 from time import sleep
 import gpiozero as gpz
 
@@ -47,15 +44,6 @@ import numpy as np #modify arrays
 
 from tensorflow import lite as tflite
 import numpy as np
-
-
-############Global Variables########################################
-imageWidth = 640
-imageHeight = 480
-imageResolutionX = 2592  #(2592,1944) (1920,1080)
-imageResolutionY = 1944
-imageFormat = '.jpg'
-imageFrameRate = 10
 
 
 ###############Fill In Your Device Parameters Below##########################
@@ -94,188 +82,11 @@ def interruptHandler(signal, frame):
     client.disconnect()
     sys.exit(0)
 
-
-def commandProcessor(cmd):
-    global statusInterval
-    global imageWidth
-    global imageHeight
-    global imageResolutionX
-    global imageResolutionY
-    global imageFormat
-    global imageFrameRate
-    global waterStressLevel
-    global data
-    global currTime
-    global currDate
-    command = cmd.data['CommandType']
-
-    # print recieved command
-    print("Command received: %s" % command)
-
-    # if command is take image
-    if(command == "takeImage"):
-        print("Camera Opening")
-        camera = PiCamera()  #Set camera parameters
-        print("setting rotation")
-        camera.rotation = 180
-        print("setting resolution")
-        camera.resolution = (imageResolutionX,imageResolutionY)
-        camera.framerate = imageFrameRate
-        print("setting date")
-        currDate = datetime.datetime.now().strftime("%Y-%m-%d")
-        currTime = datetime.datetime.now().strftime("%H:%M:%S")
-        print("capturing image")
-        camera.capture('/home/pi/images/' + currDate +'-' + currTime + imageFormat) #, resize=(imageWidth, imageHeight))
-        camera.close()
-        #camera.stop_preview()
-        print("Image Taken")
-        sleep(5)
-
-    # if command is resize image
-    if(command == "resizeImage"):
-        if((int(cmd.data['Height'])<=1944) or (int(cmd.data['Width']<=2592))):
-            imageHeight = int(cmd.data['Height'])
-            imageWidth = int(cmd.data['Width']) #Max 2592 x 1944
-            print("Images Resized to", imageWidth,"x", imageHeight)
-        else:
-            print("Images not resized, size too large")
-
-    # if command is change send interval
-    if(command == "changeSendInterval"):
-        statusInterval = int(cmd.data['Interval'])*60
-        print("Interval Changed to:", statusInterval,"seconds")
-
-    # if command is run script 
-    if(command == "runScript"):
-        script = cmd.data['scriptType']
-        print("Running Script"+ script)
-        if(script[-2:]=='py'):
-            call(['python3', '/home/pi'+script])
-        else:
-            call(['sudo','sh', '/home/pi'+script])
-
-    # if command is send code data
-    if(command == "sendCodeStatus"):
-        print("sendCodeStatus")
-
-    #if command is change schedule
-    if(command == "changeSchedule"):
-        print("changeSchedule")
-        startTimeStr = cmd.data['startTime']
-        endTimeStr = cmd.data['endTime']
-        startTime = datetime.datetime.strptime(startTimeStr,"%H:%M")
-        endTime = datetime.datetime.strptime(endTimeStr,"%H:%M")
-        onTimeHours = endTime.hour - startTime.hour
-        onTimeMin = endTime.minute - startTime.minute
-
-
-        if(onTimeMin>0):
-            offTimeHours = 23 - onTimeHours
-            offTimeMin = 60- onTimeMin
-        elif(onTimeMin == 0):
-            offTimeHours = 24-onTimeHours
-            offTimeMin = 0
-        else:
-            offTimeHours = 24 - onTimeHours
-            onTimeHours = onTimeHours-1
-            onTimeMin = 60 - abs(onTimeMin)
-            offTimeMin = 60 - onTimeMin
-        f =  open('/home/pi/wittyPi/schedules/schedule.wpi','w')
-        f.write('BEGIN   2015-08-01 '+ startTimeStr+':00'+ '\n')
-        f.write('END     2025-07-31 23:59:59'+ '\n')
-        f.write('ON      H'+ str(onTimeHours) + ' M' + str(onTimeMin)+ '\n')
-        f.write('OFF     H'+ str(offTimeHours)+ ' M' + str(offTimeMin))
-        f.close
-
-    # if command is image format
-    if(command == "imageFormat"):
-        print("imageFormat")#JPG or PNG or BMP
-        if(cmd.data['imageFormat'] == '.jpg'):
-            imageFormat = '.jpg'
-            print("Format changed to:"+imageFormat)
-        elif(cmd.data['imageFormat'] == '.png'):
-            imageFormat = '.png'
-            print("Format changed to:"+imageFormat)
-        elif(cmd.data['imageFormat'] == '.bmp'):
-            imageFormat = '.bmp'
-            print("Format changed to:"+imageFormat)
-        else:
-            print("Incompatible format")
-
-    # if command is change frames
-    if(command == "changeFrames"):
-        imageFrameRate =  int(cmd.data['frames'])
-
-        print("Frame Rate changed to:", imageFrameRate)#range(10fps-30fps)
-
-    # if command is send data
-    if(command == "sendData"):
-        print("SensorData Published")
-        try:
-            canopyTemp = 99 #mlx.object_temperature
-            airTemp = 99 #mlx.ambient_temperature
-            luxes = veml7700.light
-        except OSError:
-            pass
-        #Verify values are correct
-        while((canopyTemp >100) or (airTemp>100)):
-            try:
-                canopyTemp = 99 #mlx.object_temperature
-                airTemp = 99 #mlx.ambient_temperature
-            except OSError:
-                pass
-       # with open('/home/pi/test.txt','w+') as fout:
-       #     wittyPi = Popen(["sudo","/home/pi/wittyPi/wittyPi.sh"],stdout=fout)
-       #     sleep(15)
-       #     os.system("sudo kill %s" %(wittyPi.pid,))
-       #     tempLine = linecache.getline("/home/pi/test.txt",8)
-       #     wittyPiTemp = float(tempLine[25:30])
-       #     fout.close()
-        data = {
-            "DEVICE_ID": deviceId,
-            "DEVICE_STATUS": "On",
-            "LATITUDE": cameraLatitude,
-            "LONGITUDE": cameraLongitude,
-            "WATER_STRESS_LEVEL":waterStressLevel,
-            "CANOPY_TEMPERATURE":'%.2f' % canopyTemp,
-            "AIR_TEMPERATURE": '%.2f' % airTemp,
-            "WITTYPI_TEMPERATURE":  random.randrange(30,40),
-            "CPU_TEMPERATURE": cpuTemp,
-            "LUXOMETER":luxes,
-            "DATE_1":currDate,
-            "TIME_1":currTime,
-            #Add resolution
-
-        }
-        client.publishEvent("status","json", data)
-
-    # if command is change resolution
-    if(command == "changeResolution"):
-        imageResolutionX = int(cmd.data['imageResolutionX'])
-        imageResolutionY = int(cmd.data['imageResolutionY'])
-        print("Resolution changed to:", imageResolutionX,"x", imageResolutionY)
-
-
-    # if command is set interval
-    if cmd.commandId == "setInterval":
-        if "interval" not in cmd.data:
-            print("Error - command is missing required information: 'interval'")
-        else:
-            try:
-                interval = int(cmd.data["interval"])
-            except ValueError:
-                print("Error - interval not an integer: ", cmd.data["interval"])
-    elif cmd.commandId == "print":
-        if "message" not in cmd.data:
-            print("Error - command is missing required information: 'message'")
-        else:
-            print(cmd.data["message"])
-
-
+#if the iot.py file is called
 if __name__ == "__main__":
     signal.signal(signal.SIGINT, interruptHandler)
 
-
+    #initialize a client
     client = None
     try:
         options = {
@@ -288,35 +99,28 @@ if __name__ == "__main__":
                 "token": token,
             }
         }
-        client = wiotp.sdk.device.DeviceClient(options)
-        client.commandCallback = commandProcessor
-        client.connect()
-    except Exception as e:
-        print(str(e))
-        sys.exit(1)
+        client = wiotp.sdk.device.DeviceClient(options) # create a client using preset values
+        client.commandCallback = commandProcessor # set commandCallback to commandProcessor  
+        client.connect() # Use MQTT connection to IBM Watson IoT Plateform for publishing events
+    except Exception as e:         # store error message in 'e'
+        print(str(e))         #  printout error message
+        sys.exit(1)         # issue occured, program exit
     print("(Press Ctrl+C to disconnect)")
 
-    curr = datetime.datetime.now()
-
     street = os.listdir('/home/pi/Pictures/')
-    i=0
+
+    i=0 # 'i' is the image counter
+
+    ## Everything from here onward is the same as commandProcessor code.....??
     while True:
-        camera = PiCamera()  #Set camera parameters
-        camera.rotation = 180
-        camera.resolution = (imageResolutionX,imageResolutionY)
-        camera.framerate = imageFrameRate
-        currDate = datetime.datetime.now().strftime("%Y-%m-%d")
-        currTime = datetime.datetime.now().strftime("%H:%M:%S")
         print("taking Image")
-        camera.capture('/home/pi/images/' + currDate + '-' + currTime + imageFormat) #,resize=(imageWidth,imageHeight))
-        camera.close()
+        commands.capture_image()
         #im = imread('/home/pi/images/'+currDate+currTime+imageFormat)
         #Uncomment the above line to use the ML model on the taken image
-        file = '/home/pi/Pictures/' + street[i]
+        file = '/home/pi/Pictures/' + street[i] # set 'file' to image directory
         im = imread(file)
-        sleep(5)
         print("resizing image")
-        im_final = resize(im,(200,200))#Model was trained on 200x200 images
+        im_final = resize(im,(200,200)) #Model was trained on 200x200 images
 
         # Load TFLite model and allocate tensors.
         print("allocating tensors")
@@ -350,29 +154,10 @@ if __name__ == "__main__":
         print("Water Stress Level", waterStressLevel)
         print("Percent Confident", '%.2f' % percentConfident)
         #CPU Temp
-        cpuTemp = int(open('/sys/class/thermal/thermal_zone0/temp').read()) / 1e3 #CPU Temp
         cpu = gpz.CPUTemperature()
-        cpuTemp = int(cpu.temperature)
+        cpuTemp = cpu.temperature
         print("Sensor Reading")
         #Sensor Reading
-        i2c = busio.I2C(board.SCL, board.SDA, frequency=100000)
-        #mlx = adafruit_mlx90614.MLX90614(i2c)
-        veml7700 = adafruit_veml7700.VEML7700(i2c)
-        while True:
-            try:
-                canopyTemp = 99 #mlx.object_temperature
-                airTemp = 99 #mlx.ambient_temperature
-                luxes = veml7700.light
-                break
-            except OSError:
-                pass
-        #Verify values are correct
-        while((canopyTemp >100) or (airTemp>100)):
-            try:
-                canopyTemp = 99 #mlx.object_temperature
-                airTemp = 99 #mlx.ambient_temperature
-            except OSError:
-                pass
         #Get wittyPi Temperature
         #with open('/home/pi/test.txt','w+') as fout:
         #    wittyPi = Popen(["sudo","/home/pi/wittyPi/wittyPi.sh"],stdout=fout)
@@ -387,11 +172,8 @@ if __name__ == "__main__":
             "LATITUDE": cameraLatitude,
             "LONGITUDE": cameraLongitude,
             "WATER_STRESS_LEVEL":waterStressLevel,
-            "CANOPY_TEMPERATURE":'%.2f' % canopyTemp,
-            "AIR_TEMPERATURE": '%.2f' % airTemp,
             "WITTYPI_TEMPERATURE": random.randrange(30,40), #wittyPiTemp,
             "CPU_TEMPERATURE": cpuTemp,
-            "LUXOMETER":luxes,
             "DATE_1":currDate,
             "TIME_1":currTime,
         }
