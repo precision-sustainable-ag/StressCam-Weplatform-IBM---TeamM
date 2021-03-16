@@ -4,16 +4,11 @@ import Card from '@material-ui/core/Card';
 import CardActions from '@material-ui/core/CardActions';
 import CardContent from '@material-ui/core/CardContent';
 import Button from '@material-ui/core/Button';
-import FormHelperText from '@material-ui/core/FormHelperText';
-import FormControl from '@material-ui/core/FormControl';
-import Select from '@material-ui/core/Select';
 import Typography from '@material-ui/core/Typography';
-import InputLabel from '@material-ui/core/InputLabel';
 
-import purple from '@material-ui/core/colors/purple';
-import green from '@material-ui/core/colors/green';
-import { createMuiTheme, ThemeProvider } from '@material-ui/core/styles';
+import { ThemeProvider } from '@material-ui/core/styles';
 
+import postData from '../shared/postData';
 import themeBuilder from '../themes/DefaultTheme'
 
 const DefaultTheme = themeBuilder();
@@ -42,6 +37,10 @@ const useStyles = makeStyles({
 
 export default function GetStatus() {
   const classes = useStyles();
+
+  const finalPayload = {
+    "CommandType":"getStatus"
+  }
   
   return (
     <ThemeProvider theme={DefaultTheme}>
@@ -53,7 +52,7 @@ export default function GetStatus() {
             </CardContent>
 
             <CardActions className={classes.button}>
-                <Button size="small" color='primary' variant='contained'>Get Status</Button>
+                <Button size="small" color='primary' variant='contained' onClick={() => postData('https://connectedfarmsnodered.mybluemix.net/command1', finalPayload)}>Get Status</Button>
             </CardActions>
         </Card>
     </ThemeProvider>

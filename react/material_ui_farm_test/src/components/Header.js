@@ -1,12 +1,8 @@
 import React from 'react'
-import {AppBar, IconButton, Typography, Toolbar, Button, Menu, MenuItem } from '@material-ui/core'
+import {AppBar, IconButton, Typography, Toolbar, Menu, MenuItem } from '@material-ui/core'
 import { Link } from 'react-router-dom'
 import { makeStyles } from '@material-ui/core/styles';
 import MenuIcon from '@material-ui/icons/Menu';
-
-import About from './About'
-import Home from './Home'
-import DeviceCommands from './DeviceCommands'
 
 const useStyles = makeStyles({
     menuButton: {

@@ -1,6 +1,5 @@
 import React from 'react'
 import Grid from '@material-ui/core/Grid';
-import { makeStyles } from '@material-ui/core/styles';
 
 import SelectCamera from './commands/SelectCamera'
 import ChangeInterval from './commands/ChangeInterval'
@@ -14,20 +13,9 @@ import GetStatus from './commands/GetStatus'
 import ChangeSchedule from './commands/ChangeSchedule'
 import ChangeWidth from './commands/ChangeWidth'
 
-
-const useStyles = makeStyles({
-    commands: {
-        justifyContent: 'center'
-    }
-
-  });
-
-
 export default function About() {
-    const classes = useStyles();
-
     return (
-        <React.Fragment className={classes.commands}>
+        <React.Fragment>
             <h1>Home</h1>
             <p>Welcome to Connected Farms Web! Here you will able to see graphs of plots and send commands to the camera.</p>
             <Grid

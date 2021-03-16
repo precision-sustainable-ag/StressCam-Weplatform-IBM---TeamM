@@ -6,17 +6,11 @@ import CardContent from '@material-ui/core/CardContent';
 import TextField from '@material-ui/core/TextField';
 import Button from '@material-ui/core/Button';
 import Grid from '@material-ui/core/Grid';
-import Paper from '@material-ui/core/Paper';
-import FormHelperText from '@material-ui/core/FormHelperText';
-import FormControl from '@material-ui/core/FormControl';
-import Select from '@material-ui/core/Select';
 import Typography from '@material-ui/core/Typography';
-import InputLabel from '@material-ui/core/InputLabel';
 
-import purple from '@material-ui/core/colors/purple';
-import green from '@material-ui/core/colors/green';
-import { createMuiTheme, ThemeProvider } from '@material-ui/core/styles';
+import { ThemeProvider } from '@material-ui/core/styles';
 
+import postData from '../shared/postData';
 import themeBuilder from '../themes/DefaultTheme'
 
 const DefaultTheme = themeBuilder();
@@ -45,6 +39,31 @@ const useStyles = makeStyles({
 
 export default function ChangeSchedule() {
   const classes = useStyles();
+
+  const [state, setState] = React.useState({
+    startTime: '07:30',
+    endTime: '07:30',
+  });
+
+  const handleChangeStart = (event) => {
+    setState({
+      ...state,
+      'startTime': event.target.value,
+    });
+  };
+
+  const handleChangeEnd = (event) => {
+    setState({
+      ...state,
+      'endTime': event.target.value,
+    });
+  };
+
+  const finalPayload = {
+    "CommandType": "changeSendInterval",
+    "startTime": state.startTime,
+    "endTime": state.endTime
+  }
   
   return (
     <ThemeProvider theme={DefaultTheme}>
@@ -57,6 +76,7 @@ export default function ChangeSchedule() {
                     <Grid item xs={6}>
                     <form className={classes.container} noValidate>
                         <TextField
+                            title="start time"
                             id="time"
                             type="time"
                             defaultValue="07:30"
@@ -67,12 +87,14 @@ export default function ChangeSchedule() {
                             inputProps={{
                             step: 300, // 5 min
                             }}
+                            onChange={handleChangeStart}
                         />
                     </form>
                     </Grid>
                     <Grid item xs={6}>
                     <form className={classes.container} noValidate>
                         <TextField
+                            title="end time"
                             id="time"
                             type="time"
                             defaultValue="07:30"
@@ -83,6 +105,7 @@ export default function ChangeSchedule() {
                             inputProps={{
                             step: 300, // 5 min
                             }}
+                            onChange={handleChangeEnd}
                         />
                     </form>
                     </Grid>
@@ -93,7 +116,7 @@ export default function ChangeSchedule() {
             </CardContent>
 
             <CardActions className={classes.button}>
-                <Button size="small" color='primary' variant='contained'>Change Time Interval</Button>
+                <Button size="small" color='primary' variant='contained' onClick={() => postData('https://connectedfarmsnodered.mybluemix.net/command1', finalPayload)}>Change Time Interval</Button>
             </CardActions>
         </Card>
     </ThemeProvider>

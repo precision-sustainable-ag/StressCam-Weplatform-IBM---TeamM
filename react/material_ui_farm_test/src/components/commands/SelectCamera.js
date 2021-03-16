@@ -4,22 +4,16 @@ import Card from '@material-ui/core/Card';
 import CardActions from '@material-ui/core/CardActions';
 import CardContent from '@material-ui/core/CardContent';
 import Button from '@material-ui/core/Button';
-import FormHelperText from '@material-ui/core/FormHelperText';
 import FormLabel from '@material-ui/core/FormLabel';
 import FormControl from '@material-ui/core/FormControl';
-import FormGroup from '@material-ui/core/FormGroup';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 import Checkbox from '@material-ui/core/Checkbox';
-import Select from '@material-ui/core/Select';
 import Typography from '@material-ui/core/Typography';
-import InputLabel from '@material-ui/core/InputLabel';
-import Radio from '@material-ui/core/Radio';
 import RadioGroup from '@material-ui/core/RadioGroup';
 
-import purple from '@material-ui/core/colors/purple';
-import green from '@material-ui/core/colors/green';
-import { createMuiTheme, ThemeProvider } from '@material-ui/core/styles';
+import { ThemeProvider } from '@material-ui/core/styles';
 
+import postData from '../shared/postData';
 import themeBuilder from '../themes/DefaultTheme'
 
 const DefaultTheme = themeBuilder();
@@ -54,9 +48,14 @@ export default function SelectCamera() {
 
   const [value, setValue] = React.useState('female');
 
-  const handleChange = event => {
+  const handleChangeCamera = event => {
     setValue(event.target.value);
   };
+
+  const finalPayload = {
+    "CommandType": "changeSendInterval",
+    "Interval": value
+  }
 
   return (
     <ThemeProvider theme={DefaultTheme}>
@@ -68,11 +67,11 @@ export default function SelectCamera() {
 
                 <FormControl component="fieldset">
                   <FormLabel component="legend"></FormLabel>
-                    <RadioGroup aria-label="position" name="position" value={value} onChange={handleChange} row>
+                    <RadioGroup aria-label="position" name="position" value={value} onChange={handleChangeCamera} row>
                       <FormControlLabel style={{textColor: "#ffffff"}}
                         control={
                           <Checkbox
-                            onChange={handleChange}
+                            onChange={handleChangeCamera}
                             name="checkedB"
                             color="primary"
                           />
@@ -82,7 +81,7 @@ export default function SelectCamera() {
                       <FormControlLabel
                         control={
                           <Checkbox
-                            onChange={handleChange}
+                            onChange={handleChangeCamera}
                             name="checkedB"
                             color="primary"
                           />
@@ -92,7 +91,7 @@ export default function SelectCamera() {
                       <FormControlLabel
                         control={
                           <Checkbox
-                            onChange={handleChange}
+                            onChange={handleChangeCamera}
                             name="checkedB"
                             color="primary"
                           />
@@ -102,7 +101,7 @@ export default function SelectCamera() {
                       <FormControlLabel
                         control={
                           <Checkbox
-                            onChange={handleChange}
+                            onChange={handleChangeCamera}
                             name="checkedB"
                             color="primary"
                           />
@@ -114,7 +113,7 @@ export default function SelectCamera() {
 
             </CardContent>
             <CardActions className={classes.button}>
-                <Button size="small" color='primary' variant='contained'>Select Camera</Button>
+                <Button size="small" color='primary' variant='contained' onClick={() => postData('https://connectedfarmsnodered.mybluemix.net/command1', finalPayload)}>Select Camera</Button>
             </CardActions>
         </Card>
     </ThemeProvider>
