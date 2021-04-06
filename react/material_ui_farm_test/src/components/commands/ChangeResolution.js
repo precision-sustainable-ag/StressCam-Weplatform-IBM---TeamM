@@ -54,6 +54,7 @@ export default function ChangeResolution() {
   };
 
   const finalPayload = {
+    "DeviceID": "0001",
     "CommandType": "changeSendInterval",
     "imageResolutionX": state.resolution.split('x')[0],
     "imageResolutionY": state.resolution.split('x')[1]
@@ -86,7 +87,7 @@ export default function ChangeResolution() {
 
             </CardContent>
             <CardActions className={classes.button}>
-                <Button size="small" color='primary' variant='contained' onClick={() => postData('https://connectedfarmsnodered.mybluemix.net/command1', finalPayload)}>Change Image Resolution</Button>
+                <Button size="small" color='primary' variant='contained' onClick={() => postData('https://connectedfarmsnodered.mybluemix.net/commands', finalPayload)}>Change Image Resolution</Button>
             </CardActions>
         </Card>
     </ThemeProvider>

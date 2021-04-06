@@ -54,6 +54,7 @@ export default function ChangeInterval() {
   };
 
   const finalPayload = {
+    "DeviceID": "0001",
     "CommandType": "changeSendInterval",
     "Interval": state.interval
   }
@@ -86,7 +87,7 @@ export default function ChangeInterval() {
 
             </CardContent>
             <CardActions className={classes.button}>
-                <Button size="small" color='primary' variant='contained' onClick={() => postData('https://connectedfarmsnodered.mybluemix.net/command1', finalPayload)}>Change Interval</Button>
+                <Button size="small" color='primary' variant='contained' onClick={() => postData('https://connectedfarmsnodered.mybluemix.net/commands', finalPayload)}>Change Interval</Button>
             </CardActions>
         </Card>
     </ThemeProvider>

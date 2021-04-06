@@ -54,6 +54,7 @@ export default function ChangeImageType() {
   };
 
   const finalPayload = {
+    "DeviceID": "0001",
     "CommandType": "imageFormat",
     "imageFormat": state.imageType
   }
@@ -84,7 +85,7 @@ export default function ChangeImageType() {
 
             </CardContent>
             <CardActions className={classes.button}>
-                <Button size="small" color='primary' variant='contained' onClick={() => postData('https://connectedfarmsnodered.mybluemix.net/command1', finalPayload)}>Change Image Type</Button>
+                <Button size="small" color='primary' variant='contained' onClick={() => postData('https://connectedfarmsnodered.mybluemix.net/commands', finalPayload)}>Change Image Type</Button>
             </CardActions>
         </Card>
     </ThemeProvider>

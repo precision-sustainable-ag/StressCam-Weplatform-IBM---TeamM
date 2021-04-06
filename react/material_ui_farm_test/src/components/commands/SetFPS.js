@@ -52,6 +52,7 @@ export default function SetFPS() {
   };
 
   const finalPayload = {
+    "DeviceID": "0001",
     "CommandType": "changeFrames",
     "frames": state.frames
   }
@@ -82,7 +83,7 @@ export default function SetFPS() {
 
             </CardContent>
             <CardActions className={classes.button}>
-                <Button size="small" color='primary' variant='contained' onClick={() => postData('https://connectedfarmsnodered.mybluemix.net/command1', finalPayload)}>Change Frames</Button>
+                <Button size="small" color='primary' variant='contained' onClick={() => postData('https://connectedfarmsnodered.mybluemix.net/commands', finalPayload)}>Change Frames</Button>
             </CardActions>
         </Card>
     </ThemeProvider>

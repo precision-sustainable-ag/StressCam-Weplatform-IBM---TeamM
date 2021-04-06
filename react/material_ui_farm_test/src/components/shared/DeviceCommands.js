@@ -14,6 +14,10 @@ import ChangeSchedule from '../commands/ChangeSchedule'
 import ChangeWidth from '../commands/ChangeWidth'
 
 export default function About() {
+    function handleCamerasCallback(cameras) {
+        console.log(cameras);
+    };
+
     return (
         <React.Fragment>
             <h1>Home</h1>
@@ -27,7 +31,7 @@ export default function About() {
             alignItems = "center"
             >                    
                 <Grid item lg={12} md={12} sm={12} xs={12}>
-                    <SelectCamera/>
+                    <SelectCamera cameraCallback={handleCamerasCallback}/>
                 </Grid> 
                 <Grid item lg={3} md={4} sm={6} xs={12}>
                     <ChangeInterval/>

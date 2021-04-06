@@ -54,8 +54,9 @@ export default function RunScript() {
   };
 
   const finalPayload = {
+    "DeviceID": "0001",
     "CommandType": "runScript",
-    scriptType: state.scriptType
+    "scriptType": state.scriptType
   }
 
   return (
@@ -86,7 +87,7 @@ export default function RunScript() {
 
             </CardContent>
             <CardActions className={classes.button}>
-                <Button size="small" color='primary' variant='contained' onClick={() => postData('https://connectedfarmsnodered.mybluemix.net/command1', finalPayload)}>Run Script</Button>
+                <Button size="small" color='primary' variant='contained' onClick={() => postData('https://connectedfarmsnodered.mybluemix.net/commands', finalPayload)}>Run Script</Button>
             </CardActions>
         </Card>
     </ThemeProvider>
