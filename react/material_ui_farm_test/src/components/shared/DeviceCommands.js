@@ -30,9 +30,9 @@ export default function About() {
             justify = "center" 
             alignItems = "center"
             >                    
-                <Grid item lg={12} md={12} sm={12} xs={12}>
+                {/* <Grid item lg={12} md={12} sm={12} xs={12}>
                     <SelectCamera cameraCallback={handleCamerasCallback}/>
-                </Grid> 
+                </Grid>  */}
                 <Grid item lg={3} md={4} sm={6} xs={12}>
                     <ChangeInterval/>
                 </Grid>  
