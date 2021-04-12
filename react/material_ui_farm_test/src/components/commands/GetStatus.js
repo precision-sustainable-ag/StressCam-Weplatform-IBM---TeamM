@@ -35,11 +35,10 @@ const useStyles = makeStyles({
   }
 });
 
-export default function GetStatus() {
+export default function GetStatus(props) {
   const classes = useStyles();
 
   const finalPayload = {
-    "DeviceID": "0001",
     "CommandType":"getStatus"
   }
   
@@ -53,7 +52,7 @@ export default function GetStatus() {
             </CardContent>
 
             <CardActions className={classes.button}>
-                <Button size="small" color='primary' variant='contained' onClick={() => postData('https://connectedfarmsnodered.mybluemix.net/commands', finalPayload)}>Get Status</Button>
+                <Button size="small" color='primary' variant='contained' onClick={() => postData(finalPayload, props.selectedCameras)}>Get Status</Button>
             </CardActions>
         </Card>
     </ThemeProvider>

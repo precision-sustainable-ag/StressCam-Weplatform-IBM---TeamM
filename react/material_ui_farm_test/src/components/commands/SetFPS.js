@@ -37,7 +37,7 @@ const useStyles = makeStyles({
   }
 });
 
-export default function SetFPS() {
+export default function SetFPS(props) {
   const classes = useStyles();
 
   const [state, setState] = React.useState({
@@ -52,7 +52,6 @@ export default function SetFPS() {
   };
 
   const finalPayload = {
-    "DeviceID": "0001",
     "CommandType": "changeFrames",
     "frames": state.frames
   }
@@ -83,7 +82,7 @@ export default function SetFPS() {
 
             </CardContent>
             <CardActions className={classes.button}>
-                <Button size="small" color='primary' variant='contained' onClick={() => postData('https://connectedfarmsnodered.mybluemix.net/commands', finalPayload)}>Change Frames</Button>
+                <Button size="small" color='primary' variant='contained' onClick={() => postData(finalPayload, props.selectedCameras)}>Change Frames</Button>
             </CardActions>
         </Card>
     </ThemeProvider>
