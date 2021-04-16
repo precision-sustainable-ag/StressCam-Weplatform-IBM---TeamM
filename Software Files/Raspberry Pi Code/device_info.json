@@ -7,9 +7,9 @@
     },
     "key": {
         "passpharse": {
-            "password": "ConnectedFarms_camera_QC"
+            "password": "your_password"
         },
-        "namespace": "107e1420-79c6-4ef3-a4c1-67ce9b57aa36"
+        "namespace": "your_key"
     },
     "image_value": {
         "imageWidth": 200,
