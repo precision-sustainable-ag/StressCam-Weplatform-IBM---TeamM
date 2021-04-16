@@ -1,5 +1,5 @@
 import auth_ibm_iam
-from sys import path
+
 try:
     from wiotp.sdk.device import DeviceClient #changed from import wiotp.sdk.device
 except ImportError:

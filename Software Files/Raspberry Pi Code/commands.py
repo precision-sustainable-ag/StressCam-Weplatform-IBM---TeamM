@@ -5,12 +5,10 @@ from subprocess import run
 from gpiozero import CPUTemperature
 from random import randrange
 import change_device_info
-
 ##import values from device_info file
 image_info = change_device_info.read_image_value()
 device_info = change_device_info.read_device_value()
 
-#load the most updated file
 def load_file(*arg):
     print("Reading value")
     info = ''
@@ -39,6 +37,7 @@ def capture_image(currDate, currTime):
     print("Image Taken")
     sleep(5)
 
+
 def resize_image(height = image_info["imageHeight"], width = image_info["imageWidth"]):
     image_size = {
         "imageWidth" : width,
@@ -54,7 +53,7 @@ def change_resolution(new_x_resolution = image_info['imageResolutionX'],new_y_re
     "imageResolutionY" : new_y_resolution
     }
     change_device_info.change_image_value(**new_resolution)
-    print("Resolution changed to:", new_resolution.get("imageResolutionX") ,"x", new_resolution.get("imageResolutionY") , "y") 
+    print("Resolution changed to:", new_resolution.get("imageResolutionX") ,"x", new_resolution.get("imageResolutionY") , "y") # set image resolution to the desire value pulled from web request's meta data
 
 
 def new_interval(interval = device_info["statusInterval"]):

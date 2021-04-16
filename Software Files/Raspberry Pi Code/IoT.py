@@ -62,8 +62,7 @@ if __name__ == "__main__":
        	currTime = datetime.datetime.now().strftime("%H_%M_%S")
         capture_image(currDate,currTime) #capture image function, ref:commands.py
         devices.LogEntry
-        ####
-
+        #invoke ML process
         water_stress_lv=tensor_flow_process.ml_process(street,i)
         ####
         #Get wittyPi Temperature
@@ -79,5 +78,5 @@ if __name__ == "__main__":
             data = json.load(f)
         f.close()
         info = load_file('device','image')
-        print(info)        
+        print(info)
 #        sleep(device_info['statusInterval'])
