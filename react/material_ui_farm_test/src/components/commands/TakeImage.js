@@ -36,11 +36,10 @@ const useStyles = makeStyles({
   }
 });
 
-export default function TakeImage() {
+export default function TakeImage(props) {
   const classes = useStyles();
 
   const finalPayload = {
-    "DeviceID": "0001",
     "CommandType":"takeImage"
   }
   
@@ -54,7 +53,7 @@ export default function TakeImage() {
             </CardContent>
 
             <CardActions className={classes.button}>
-                <Button size="small" color='primary' variant='contained' onClick={() => postData('https://connectedfarmsnodered.mybluemix.net/commands', finalPayload)}>Take Image</Button> 
+                <Button size="small" color='primary' variant='contained' onClick={() => postData(finalPayload, props.selectedCameras)}>Take Image</Button> 
             </CardActions>
         </Card>
     </ThemeProvider>

@@ -43,12 +43,12 @@ const useStyles = makeStyles({
   }
 });
 
-export default function SelectCamera() {
+export default function SelectCamera(props) {
   const classes = useStyles();
 
-  const [value, setValue] = React.useState({})
+  const [value, setValue] = useState()
 
-  const [state, setState] = React.useState({
+  const [state, setState] = useState({
     checkboxes: [
       {
         label: "Camera 1",
@@ -67,7 +67,6 @@ export default function SelectCamera() {
         checked: false
       }
     ],
-    filterSelect: 'ALL'
   });
 
   
@@ -78,38 +77,69 @@ export default function SelectCamera() {
       checkboxes: [
         {
           label: "Camera 1",
-          checked: false
+          checked: false,
+          id: 1,
         },
         {
           label: "Camera 2",
-          checked: false
+          checked: false,
+          id: 2,
         },
         {
           label: "Camera 3",
-          checked: false
+          checked: false,
+          id: 3,
         },
         {
           label: "Camera 4",
-          checked: false
+          checked: false,
+          id: 4,
+        },
+        {
+          label: "Camera 5",
+          checked: false,
+          id: 5,
         }
       ],
-      filterSelect: 'ALL'
     }))
   }, []);
 
   const handleChangeCamera = event => {
+    // console.log(event.target.value);
     setValue(event.target.value);
+
+    let newState = state;
+
+    newState.checkboxes.forEach((camera) => {
+        if (camera.id === parseInt(event.target.value)){
+            camera.checked = !camera.checked;
+        }
+            
+    })
+
+    console.log(JSON.stringify(newState.checkboxes))
+
+    setState(newState)
+
+    const selectedCamerasIDs = [];
+
+    state.checkboxes.forEach((camera) => {
+        console.log(camera)
+        if(camera.checked === true){
+            console.log("found " + camera.id)
+            selectedCamerasIDs.push(camera.id)
+        }
+    })
+
+    console.log(selectedCamerasIDs)
+    props.cameraCallback(selectedCamerasIDs);
   };
 
   const finalPayload = {
-    "DeviceID": "0001",
     "CommandType": "changeSendInterval",
     "Interval": value
   }
 
-  function returnCameraList() {
-    return "hello world";
-  } 
 
   return (
     <ThemeProvider theme={DefaultTheme}>
@@ -121,86 +151,31 @@ export default function SelectCamera() {
 
                 <FormControl component="fieldset">
                   <FormLabel component="legend"></FormLabel>
-                    <RadioGroup aria-label="position" name="position" value={value} onChange={handleChangeCamera} row>
-                      <FormControlLabel style={{textColor: "#ffffff"}}
-                        control={
-                          <Checkbox
-                            onChange={handleChangeCamera}
-                            name="checkedB"
-                            color="primary"
-                          />
-                        }
-                        label={<Typography variant="body2" color="textSecondary">Camera 1</Typography>}
-                      />
-                      <FormControlLabel
-                        control={
-                          <Checkbox
-                            onChange={handleChangeCamera}
-                            name="checkedB"
-                            color="primary"
-                          />
-                        }
-                        label={<Typography variant="body2" color="textSecondary">Camera 2</Typography>}
-                      />
-                      <FormControlLabel
-                        control={
-                          <Checkbox
-                            onChange={handleChangeCamera}
-                            name="checkedB"
-                            color="primary"
-                          />
-                        }
-                        label={<Typography variant="body2" color="textSecondary">Camera 3</Typography>}
-                      />
-                      <FormControlLabel
-                        control={
-                          <Checkbox
-                            onChange={handleChangeCamera}
-                            name="checkedB"
-                            color="primary"
-                          />
-                        }
-                        label={<Typography variant="body2" color="textSecondary">Camera 4</Typography>}
-                      />
+                    <RadioGroup aria-label="position" name="position" value={value}  row>
+                      {state.checkboxes.map((checkbox, index) => (
+                          <div key={index}>
+                              <FormControlLabel style={{textColor: "#ffffff"}}
+                                control={
+                                    <Checkbox
+                                    onChange={handleChangeCamera}
+                                    name="checkedB"
+                                    color="primary"
+                                    value={checkbox.id}
+                                    />
+                                }
+                                label={<Typography variant="body2" color="textSecondary">{checkbox.label}</Typography>}
+                              />
+                          </div>
+                        
+                      ))}
                     </RadioGroup>
                   </FormControl>
 
             </CardContent>
             <CardActions className={classes.button}>
-                <Button size="small" color='primary' variant='contained' onClick={() => postData('https://connectedfarmsnodered.mybluemix.net/commands', finalPayload)}>Select Camera</Button>
+                <Button size="small" color='primary' variant='contained' onClick={() => postData(finalPayload, props.selectedCameras)}>Select Camera</Button>
             </CardActions>
         </Card>
     </ThemeProvider>
   );
-  // const {checkboxes, state.filterSelect} = state;
-
-  // function toggleCheckbox(index) {
-  //   console.log("toggle " + checkboxes)
-  //   const {checkboxes, filterSelect} = state;
-  //   checkboxes[index].checked = !checkboxes[index].checked;
-
-  //   setState({
-  //     checkboxes
-  //   });
-  // }
-  // const {checkboxes, filterSelect} = state;
-
-  // return checkboxes
-  //   .filter(checkbox =>
-  //     filterSelect === 'ALL' ||
-  //     filterSelect === 'CHECKED' && checkbox.checked ||
-  //     filterSelect === 'UNCHECKED' && !checkbox.checked
-  //   )
-  //   .map((checkbox, index) =>
-  //       <div>
-  //           <label>
-  //               <input
-  //                   type="checkbox"
-  //                   checked={checkbox.checked}
-  //                   onChange={toggleCheckbox.bind(index)}
-  //               />
-  //               {checkbox.label}
-  //           </label>
-  //       </div>
-  // );
 }

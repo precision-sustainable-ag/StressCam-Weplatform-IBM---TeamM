@@ -37,7 +37,7 @@ const useStyles = makeStyles({
   }
 });
 
-export default function ChangeResolution() {
+export default function ChangeResolution(props) {
   const classes = useStyles();
   
 
@@ -54,8 +54,7 @@ export default function ChangeResolution() {
   };
 
   const finalPayload = {
-    "DeviceID": "0001",
-    "CommandType": "changeSendInterval",
+    "CommandType": "changeResolution",
     "imageResolutionX": state.resolution.split('x')[0],
     "imageResolutionY": state.resolution.split('x')[1]
   }
@@ -87,7 +86,7 @@ export default function ChangeResolution() {
 
             </CardContent>
             <CardActions className={classes.button}>
-                <Button size="small" color='primary' variant='contained' onClick={() => postData('https://connectedfarmsnodered.mybluemix.net/commands', finalPayload)}>Change Image Resolution</Button>
+                <Button size="small" color='primary' variant='contained' onClick={() => postData(finalPayload, props.selectedCameras)}>Change Image Resolution</Button>
             </CardActions>
         </Card>
     </ThemeProvider>

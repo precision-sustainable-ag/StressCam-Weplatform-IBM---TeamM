@@ -37,7 +37,7 @@ const useStyles = makeStyles({
   }
 });
 
-export default function ChangeInterval() {
+export default function ChangeInterval(props) {
   const classes = useStyles();
   
 
@@ -54,7 +54,6 @@ export default function ChangeInterval() {
   };
 
   const finalPayload = {
-    "DeviceID": "0001",
     "CommandType": "changeSendInterval",
     "Interval": state.interval
   }
@@ -87,7 +86,7 @@ export default function ChangeInterval() {
 
             </CardContent>
             <CardActions className={classes.button}>
-                <Button size="small" color='primary' variant='contained' onClick={() => postData('https://connectedfarmsnodered.mybluemix.net/commands', finalPayload)}>Change Interval</Button>
+                <Button size="small" color='primary' variant='contained' onClick={() => postData(finalPayload, props.selectedCameras)}>Change Interval</Button>
             </CardActions>
         </Card>
     </ThemeProvider>

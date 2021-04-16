@@ -14,9 +14,21 @@ import ChangeSchedule from '../commands/ChangeSchedule'
 import ChangeWidth from '../commands/ChangeWidth'
 
 export default function About() {
-    function handleCamerasCallback(cameras) {
+    // function handleCamerasCallback(cameras) {
+    //     console.log(cameras);
+    // }
+
+    const [selectedCameras, setSelectedCameras] = React.useState([]);
+
+    const handleCamerasCallback = (cameras) => {
         console.log(cameras);
-    };
+        // const cameraIDArray = [];
+        // cameras.map((camera) => (
+        //     cameraIDArray.push(camera.id)
+        // ))
+        setSelectedCameras(cameras);
+        console.log(cameras);
+    }
 
     return (
         <React.Fragment>
@@ -30,38 +42,38 @@ export default function About() {
             justify = "center" 
             alignItems = "center"
             >                    
-                {/* <Grid item lg={12} md={12} sm={12} xs={12}>
+                <Grid item lg={12} md={12} sm={12} xs={12}>
                     <SelectCamera cameraCallback={handleCamerasCallback}/>
-                </Grid>  */}
+                </Grid> 
                 <Grid item lg={3} md={4} sm={6} xs={12}>
-                    <ChangeInterval/>
+                    <ChangeInterval selectedCameras={selectedCameras} />
                 </Grid>  
                 <Grid item lg={3} md={4} sm={6} xs={12}>
-                    <ChangeResolution/>
+                    <ChangeResolution selectedCameras={selectedCameras} />
                 </Grid>  
                 <Grid item lg={3} md={4} sm={6} xs={12}>
-                    <ChangeImageType/>
+                    <ChangeImageType selectedCameras={selectedCameras} />
                 </Grid>  
                 <Grid item lg={3} md={4} sm={6} xs={12}>
-                    <RunScript/>
+                    <RunScript selectedCameras={selectedCameras} />
                 </Grid>  
                 <Grid item lg={3} md={4} sm={6} xs={12}>
-                    <SetFPS/>
+                    <SetFPS selectedCameras={selectedCameras} />
                 </Grid>  
                 <Grid item lg={3} md={4} sm={6} xs={12}>
-                    <TakeImage/>
+                    <TakeImage selectedCameras={selectedCameras} />
                 </Grid>  
                 <Grid item lg={3} md={4} sm={6} xs={12}>
-                    <SendData/>
+                    <SendData selectedCameras={selectedCameras} />
                 </Grid>  
                 <Grid item lg={3} md={4} sm={6} xs={12}>
-                    <GetStatus/>
+                    <GetStatus selectedCameras={selectedCameras} />
                 </Grid>  
                 <Grid item lg={3} md={4} sm={6} xs={12}>
-                    <ChangeSchedule/>
+                    <ChangeSchedule selectedCameras={selectedCameras} />
                 </Grid>  
                 <Grid item lg={3} md={4} sm={6} xs={12}>
-                    <ChangeWidth/>
+                    <ChangeWidth selectedCameras={selectedCameras} />
                 </Grid>       
             </Grid>
 

@@ -37,7 +37,7 @@ const useStyles = makeStyles({
   }
 });
 
-export default function RunScript() {
+export default function RunScript(props) {
   const classes = useStyles();
   
 
@@ -54,7 +54,6 @@ export default function RunScript() {
   };
 
   const finalPayload = {
-    "DeviceID": "0001",
     "CommandType": "runScript",
     "scriptType": state.scriptType
   }
@@ -87,7 +86,7 @@ export default function RunScript() {
 
             </CardContent>
             <CardActions className={classes.button}>
-                <Button size="small" color='primary' variant='contained' onClick={() => postData('https://connectedfarmsnodered.mybluemix.net/commands', finalPayload)}>Run Script</Button>
+                <Button size="small" color='primary' variant='contained' onClick={() => postData(finalPayload, props.selectedCameras)}>Run Script</Button>
             </CardActions>
         </Card>
     </ThemeProvider>

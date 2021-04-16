@@ -37,7 +37,7 @@ const useStyles = makeStyles({
   }
 });
 
-export default function ChangeSchedule() {
+export default function ChangeSchedule(props) {
   const classes = useStyles();
 
   const [state, setState] = React.useState({
@@ -60,7 +60,6 @@ export default function ChangeSchedule() {
   };
 
   const finalPayload = {
-    "DeviceID": "0001",
     "CommandType": "changeSendInterval",
     "startTime": state.startTime,
     "endTime": state.endTime
@@ -117,7 +116,7 @@ export default function ChangeSchedule() {
             </CardContent>
 
             <CardActions className={classes.button}>
-                <Button size="small" color='primary' variant='contained' onClick={() => postData('https://connectedfarmsnodered.mybluemix.net/commands', finalPayload)}>Change Time Interval</Button>
+                <Button size="small" color='primary' variant='contained' onClick={() => postData(finalPayload, props.selectedCameras)}>Change Time Interval</Button>
             </CardActions>
         </Card>
     </ThemeProvider>

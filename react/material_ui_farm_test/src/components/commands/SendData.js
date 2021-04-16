@@ -35,11 +35,10 @@ const useStyles = makeStyles({
   }
 });
 
-export default function SendData() {
+export default function SendData(props) {
   const classes = useStyles();
 
   const finalPayload = {
-    "DeviceID": "0001",
     "CommandType":"sendSensorData"
   }
   
@@ -53,7 +52,7 @@ export default function SendData() {
             </CardContent>
 
             <CardActions className={classes.button}>
-                <Button size="small" color='primary' variant='contained' onClick={() => postData('https://connectedfarmsnodered.mybluemix.net/commands', finalPayload)}>Send Data</Button>
+                <Button size="small" color='primary' variant='contained' onClick={() => postData(finalPayload, props.selectedCameras)}>Send Data</Button>
             </CardActions>
         </Card>
     </ThemeProvider>
