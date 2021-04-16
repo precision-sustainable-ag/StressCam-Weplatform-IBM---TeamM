@@ -3,18 +3,27 @@ import json
 #read saved device info 
 with open('/home/pi/device_info.json') as init_file:
     data = json.load(init_file)
-init_file.close()
+    init_file.close()
 
 #initalize info for command.py
 def read_image_value():
+    with open('/home/pi/device_info.json') as init_file:
+        data = json.load(init_file)
+        init_file.close()
     image_info = data['image_value']
     return image_info
 
 def read_device_value():
+    with open('/home/pi/device_info.json') as init_file:
+        data = json.load(init_file)
+        init_file.close()
     device_info = data['device_info']
     return device_info
 
 def read_key_info():
+    with open('/home/pi/device_info.json') as init_file:
+        data = json.load(init_file)
+        init_file.close()    
     password_info = data['key']
     return password_info
 

@@ -5,20 +5,23 @@ from subprocess import run
 from gpiozero import CPUTemperature
 from random import randrange
 import change_device_info
+
 ##import values from device_info file
 image_info = change_device_info.read_image_value()
 device_info = change_device_info.read_device_value()
 
+#load the most updated file
 def load_file(*arg):
     print("Reading value")
+    info = ''
     for i in arg:
         if i == 'image':
             print("Reading image value")
-            return change_device_info.read_image_value()
+            info += f'Current Device Info: {change_device_info.read_image_value()}'
         elif i == 'device':
             print("Reading device value")
-            return change_device_info.read_device_value()
-
+            info += f'\nCurrent Image Info: {change_device_info.read_device_value()}'
+    return info
 
 def capture_image(currDate, currTime):
     image_info = change_device_info.read_image_value()
@@ -36,7 +39,6 @@ def capture_image(currDate, currTime):
     print("Image Taken")
     sleep(5)
 
-
 def resize_image(height = image_info["imageHeight"], width = image_info["imageWidth"]):
     image_size = {
         "imageWidth" : width,
@@ -52,7 +54,7 @@ def change_resolution(new_x_resolution = image_info['imageResolutionX'],new_y_re
     "imageResolutionY" : new_y_resolution
     }
     change_device_info.change_image_value(**new_resolution)
-    print("Resolution changed to:", new_resolution.get("imageResolutionX") ,"x", new_resolution.get("imageResolutionY") , "y") # set image resolution to the desire value pulled from web request's meta data
+    print("Resolution changed to:", new_resolution.get("imageResolutionX") ,"x", new_resolution.get("imageResolutionY") , "y") 
 
 
 def new_interval(interval = device_info["statusInterval"]):
@@ -120,7 +122,7 @@ def change_frame_rate(frame_rate = image_info['imageFrameRate']):
     change_device_info.change_image_value(**new_frame_rate)
     print("Frame rate changed to:",frame_rate)
 
-def publish_data(currDate, currTime, waterStressLevel):
+def publish_data(currDate, currTime, waterStressLevel,witty_temp =randrange(30,40) ):
     device_info = change_device_info.read_device_value()
     cpu = CPUTemperature()
     data = {
@@ -128,7 +130,7 @@ def publish_data(currDate, currTime, waterStressLevel):
     "LATITUDE": device_info['cameraLatitude'],
     "LONGITUDE": device_info['cameraLongitude'],
     "WATER_STRESS_LEVEL":waterStressLevel,
-    "WITTYPI_TEMPERATURE": randrange(30,40), #wittyPiTemp,
+    "WITTYPI_TEMPERATURE": witty_temp, #wittyPiTemp,
     "CPU_TEMPERATURE": cpu.temperature,
     "DATE_1":currDate,
     "TIME_1":currTime

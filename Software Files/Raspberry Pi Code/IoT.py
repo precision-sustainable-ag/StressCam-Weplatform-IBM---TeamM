@@ -15,12 +15,14 @@ from os import listdir
 import json
 import signal
 import datetime
+import subprocess
 
 
 from sys import path,exit
 path.insert(0,"/home/pi")
 path.insert(0,"/usr/local/lib/python3.7/dist-packages")
 path.insert(0,"/usr/local/lib/python3.7/dist-packages/wiotp/sdk/api/registry")
+
 #### Custom Modules ####
 from commands import capture_image, publish_data, load_file
 from wiotp.sdk.api.registry import devices
@@ -58,28 +60,24 @@ if __name__ == "__main__":
         print("taking Image")
        	currDate = datetime.datetime.now().strftime("%d_%m_%y")
        	currTime = datetime.datetime.now().strftime("%H_%M_%S")
-        capture_image(currDate,currTime)
+        capture_image(currDate,currTime) #capture image function, ref:commands.py
         devices.LogEntry
         ####
+
         water_stress_lv=tensor_flow_process.ml_process(street,i)
         ####
         #Get wittyPi Temperature
-        #with open('/home/pi/test.txt','w+') as fout:
-        #    wittyPi = Popen(["sudo","/home/pi/wittyPi/wittyPi.sh"],stdout=fout)
-        #    sleep(15)
-        #    os.system("sudo kill %s" %(wittyPi.pid,))
-        #    tempLine = linecache.getline("/home/pi/test.txt",8)
-        #    wittyPiTemp = float(tempLine[25:30])
-        #    fout.close()
-        camera_data = publish_data(currDate,currTime,water_stress_lv)
+        witty_temp = subprocess.run(['sh','get_temp_witty.sh'], stdout = subprocess.PIPE, encoding = 'utf-8')
+        #
+        camera_data = publish_data(currDate,currTime,water_stress_lv,witty_temp.stdout)
         client.publishEvent('status','json',camera_data)
 #        hologram_commands.message_publish(hologram, camera_data)
         with open('/home/pi/data.txt', 'a') as outfile:
             json.dump(camera_data, outfile)
             outfile.write('\n')
-        device_info = load_file('device')
-        image_info = load_file('image')
-        print(device_info)
-        print(image_info)
-        
+        with open('/home/pi/device_info.json') as f:
+            data = json.load(f)
+        f.close()
+        info = load_file('device','image')
+        print(info)        
 #        sleep(device_info['statusInterval'])
