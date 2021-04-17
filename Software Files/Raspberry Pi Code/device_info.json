@@ -7,15 +7,9 @@
     },
     "key": {
         "passpharse": {
-<<<<<<< HEAD
             "password": "your_cloud_function_password"
         },
         "namespace": "your_cloud_function_namespace"
-=======
-            "password": "your_password"
-        },
-        "namespace": "your_key"
->>>>>>> 5d1c00f19006c2fdcad344f29709e26fec3d97f9
     },
     "image_value": {
         "imageWidth": 200,
