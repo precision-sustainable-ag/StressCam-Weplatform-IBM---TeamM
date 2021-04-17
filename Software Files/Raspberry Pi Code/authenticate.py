@@ -12,6 +12,7 @@ import subprocess
 from subprocess import check_output
 import http.client
 import json
+# This method will invoke cloud function to return API key info for cloudant DB
 def api_key_request(namespace,password):
     #secrect= check_output("ibmcloud iam oauth-tokens", shell = True, encoding='utf-8')
     #sec = secrect.split("IAM token:  ",1)[1]

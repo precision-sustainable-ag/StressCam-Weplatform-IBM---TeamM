@@ -3,8 +3,12 @@ from os import listdir
 from sys import path
 import json
 path.insert(0,"/home/pi")
+#######Custom Modules#########
 import commands
 from wiotp_login import client
+##############################
+#This method is used by wiotp for command processing.
+#device will receive command from website and the commands will be forwarded to this script to be processed 
 def commandProcessor(cmd):
     command = cmd.data['CommandType']
     currDate=datetime.datetime.now().strftime("%d_%m_%y")
