@@ -1,5 +1,6 @@
 import auth_ibm_iam
 
+### Below 'try --- except' block is from IBM documentation ###
 try:
     from wiotp.sdk.device import DeviceClient #changed from import wiotp.sdk.device
 except ImportError:
@@ -16,4 +17,5 @@ except ImportError:
         path.insert(0, cmd_subfolder)
     import wiotp.sdk.device
 
+### assign wiotp information into 'client' variable ###
 client = DeviceClient(auth_ibm_iam.query_wiotp_info()) # create a client using preset values

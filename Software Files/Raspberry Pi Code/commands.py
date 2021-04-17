@@ -9,9 +9,10 @@ import change_device_info
 image_info = change_device_info.read_image_value()
 device_info = change_device_info.read_device_value()
 
-def load_file(*arg):
+#This method will provide current device and image information 
+def load_file(*arg): #argument(s) passed in here as a tuple
     print("Reading value")
-    info = ''
+    info = '' #initialize variable
     for i in arg:
         if i == 'image':
             print("Reading image value")
@@ -19,8 +20,9 @@ def load_file(*arg):
         elif i == 'device':
             print("Reading device value")
             info += f'\nCurrent Image Info: {change_device_info.read_device_value()}'
-    return info
+    return info #return info variable
 
+#This method will take image and save the image inside images folder
 def capture_image(currDate, currTime):
     image_info = change_device_info.read_image_value()
     print("Camera Opening")
@@ -38,6 +40,7 @@ def capture_image(currDate, currTime):
     sleep(5)
 
 
+#This method will resize the image
 def resize_image(height = image_info["imageHeight"], width = image_info["imageWidth"]):
     image_size = {
         "imageWidth" : width,
@@ -47,6 +50,8 @@ def resize_image(height = image_info["imageHeight"], width = image_info["imageWi
     print("Images Resized to", image_size["imageWidth"],"x", image_size["imageHeight"],"y")
 
 
+
+#This method will change the resolution the next image being taken 
 def change_resolution(new_x_resolution = image_info['imageResolutionX'],new_y_resolution = image_info['imageResolutionY']):
     new_resolution={
     "imageResolutionX" : new_x_resolution,
@@ -56,6 +61,7 @@ def change_resolution(new_x_resolution = image_info['imageResolutionX'],new_y_re
     print("Resolution changed to:", new_resolution.get("imageResolutionX") ,"x", new_resolution.get("imageResolutionY") , "y") # set image resolution to the desire value pulled from web request's meta data
 
 
+#This method will change the status update interval.
 def new_interval(interval = device_info["statusInterval"]):
     statusInterval = {
         "interval":interval # convert received minute interval to seconds
@@ -64,6 +70,7 @@ def new_interval(interval = device_info["statusInterval"]):
     print("Interval Changed to:", statusInterval,"seconds") # display interval value in seconds
 
 
+#This method will run the desired script
 def run_script(script_type):
         print("Running Script"+ script_type)
         #if script extendtion is '.py', then use python3, else use super-user linux command
@@ -72,6 +79,8 @@ def run_script(script_type):
         else:
             run(['sudo','sh', '/home/pi/'+ script_type])
 
+
+#This method will change camera operating schedule
 def change_schedule(start_time, end_time):
     startTime = datetime.datetime.strptime(start_time,"%H:%M") # parse start time
     endTime = datetime.datetime.strptime(end_time,"%H:%M") # parse end time
@@ -99,6 +108,8 @@ def change_schedule(start_time, end_time):
     f.write('OFF     H'+ str(offTimeHours)+ ' M' + str(offTimeMin))
     f.close
 
+
+#This method will change the format of future image taken
 def change_image_format(image_format = image_info['imageFormat']):
     new_image_format={
        "imageFormat":image_format
@@ -114,6 +125,7 @@ def change_image_format(image_format = image_info['imageFormat']):
         print("Incompatible format")
 
 
+#This method will change the image frame rate
 def change_frame_rate(frame_rate = image_info['imageFrameRate']):
     new_frame_rate={
        "imageFrameRate":frame_rate
@@ -121,6 +133,8 @@ def change_frame_rate(frame_rate = image_info['imageFrameRate']):
     change_device_info.change_image_value(**new_frame_rate)
     print("Frame rate changed to:",frame_rate)
 
+
+#This method will return information of image and camera itself
 def publish_data(currDate, currTime, waterStressLevel,witty_temp =randrange(30,40) ):
     device_info = change_device_info.read_device_value()
     cpu = CPUTemperature()

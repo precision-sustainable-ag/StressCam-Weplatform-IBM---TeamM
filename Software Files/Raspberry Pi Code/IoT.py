@@ -58,25 +58,44 @@ if __name__ == "__main__":
     
     while True:
         print("taking Image")
+        ####Keeping the time updated####
        	currDate = datetime.datetime.now().strftime("%d_%m_%y")
        	currTime = datetime.datetime.now().strftime("%H_%M_%S")
-        capture_image(currDate,currTime) #capture image function, ref:commands.py
-        devices.LogEntry
-        #invoke ML process
+
+        ####capture image function, ref:commands.py####
+        capture_image(currDate,currTime) 
+        devices.LogEntry # This is meant to used for debug message from wiotp platform. See reference:"https://ibm-watson-iot.github.io/iot-python/application/api/registry/diag/"
+        
+        #####invoke ML process#####
         water_stress_lv=tensor_flow_process.ml_process(street,i)
-        ####
-        #Get wittyPi Temperature
+        ###########################
+
+        #####Getting wittyPi Temperature#####
         witty_temp = subprocess.run(['sh','get_temp_witty.sh'], stdout = subprocess.PIPE, encoding = 'utf-8')
-        #
+        ####################################
+        
+        ### invoke method "publish_data" to populate data and format data in a dict format ###
         camera_data = publish_data(currDate,currTime,water_stress_lv,witty_temp.stdout)
+
+        ### publish data to wiotp ###
         client.publishEvent('status','json',camera_data)
+
+        ### publish data using hologram webhook ###
 #        hologram_commands.message_publish(hologram, camera_data)
+
+        ### write data into a data file ###
         with open('/home/pi/data.txt', 'a') as outfile:
             json.dump(camera_data, outfile)
             outfile.write('\n')
+
+        ### Update all camera and image setting ###
         with open('/home/pi/device_info.json') as f:
             data = json.load(f)
         f.close()
+
+        ### Test camera and image setting is changed using website ###
         info = load_file('device','image')
         print(info)
+
+        ### Have the system publish data on predetermined interval ###
 #        sleep(device_info['statusInterval'])

@@ -1,3 +1,5 @@
+### This is the shell script that will provide witty pi temperature######### 
+### This scipt is from witty pi github repo, ref:"https://github.com/uugear/Witty-Pi-2/tree/master/wittyPi"##
 #!/bin/bash
 # halt by GPIO-4 (BCM naming)
 HALT_PIN=4
