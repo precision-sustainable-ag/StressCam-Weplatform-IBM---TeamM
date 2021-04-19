@@ -1,6 +1,7 @@
 from sys import path
 path.insert(0,"/usr/local/lib/python3.7/dist-packages/tensorflow_core/lite/python")
 path.insert(0,"/usr/local/lib/python3.7/dist-packages/skimages")
+from PIL import Image
 from skimage.io import imread #read images
 from skimage.io import imsave
 from skimage.transform import resize #resize images
@@ -13,17 +14,20 @@ def ml_process(street,i):
     #im = imread('/home/pi/images/'+currDate+currTime+imageFormat)
     #Uncomment the above line to use the ML model on the taken image
     file = '/home/pi/images/' + street[i] # set 'file' to image directory
-    im = imread(file)
-    print("resizing image")
-    im_final = resize(im,(200,200)) #Model was trained on 200x200 images
+    im = Image.open(f'{file}')
+    width,height = im.size
+    if width != 200 & height !=200:
+        print("resizing image")
+        im = resize(im,(200,200)) #Model was trained on 200x200 images
     # Load TFLite model and allocate tensors.
+    im = imread(f'{file}')
     print("allocating tensors")
     interpreter = tflite.Interpreter(model_path="/home/pi/converted_model.tflite")
     interpreter.allocate_tensors()
     # Get input and output tensors.
     input_details = interpreter.get_input_details()
     output_details = interpreter.get_output_details()
-    Xtest = np.array(im_final, dtype = np.float32)
+    Xtest = np.array(im, dtype = np.float32)
 
     #test model
     input_data = np.expand_dims(Xtest,axis=0)
