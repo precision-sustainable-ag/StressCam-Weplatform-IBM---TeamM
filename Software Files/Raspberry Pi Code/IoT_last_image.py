@@ -29,6 +29,7 @@ from wiotp.sdk.api.registry import devices
 #import hologram_commands 
 from commandProcessor import commandProcessor
 import tensor_flow_process
+import db2_publish
 #### Custom Modules ####
 
 
@@ -104,5 +105,8 @@ if __name__ == "__main__":
         info = load_file('device','image')
         print(info)
         i=i+1
+
+        ###Publish data to DB2###
+        db2_publish.db2_data_publish((camera_data['DEVICE_ID'],camera_data['LATITUDE'],camera_data['LONGITUDE'],camera_data['WATER_STRESS_LEVEL'],camera_data['WITTYPI_TEMPERATURE'],camera_data['CPU_TEMPERATURE'],camera_data['DATE_1'],camera_data['TIME_1']))
         ### Have the system publish data on predetermined interval ###
 #        sleep(device_info['statusInterval'])
