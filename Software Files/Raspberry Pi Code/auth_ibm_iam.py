@@ -19,7 +19,7 @@ def ibm_auth():
 def query_wiotp_info():
 	client = ibm_auth() #assign cloudant credential 
 	serial_info  =subprocess.check_output(['cat /proc/cpuinfo'],shell = True, encoding="UTF-8") #invoke shell script for cpu serial info
-	serial_info = re.search("([0-9a-z]{16}\n)", serial_info) #regex search for serial info
+	serial_info = re.search("([0-9a-z]{16})", serial_info) #regex search for serial info
 	selector= {
 	      "_id": ""
 	}

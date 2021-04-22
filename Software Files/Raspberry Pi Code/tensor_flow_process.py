@@ -10,17 +10,19 @@ import numpy as np #modify arrays
 #from keras.models import load_model # load pretrained models
 from time import sleep
 
-def ml_process(street,i):
+def ml_process(imagename):
     #im = imread('/home/pi/images/'+currDate+currTime+imageFormat)
     #Uncomment the above line to use the ML model on the taken image
-    file = '/home/pi/images/' + street[i] # set 'file' to image directory
+    file = f'/home/pi/Pictures/{imagename}' # set 'file' to image directory
     im = Image.open(f'{file}')
     width,height = im.size
     if width != 200 & height !=200:
+        im = imread(f'{file}')
         print("resizing image")
         im = resize(im,(200,200)) #Model was trained on 200x200 images
+    else:
+        im = imread(f'{file}')
     # Load TFLite model and allocate tensors.
-    im = imread(f'{file}')
     print("allocating tensors")
     interpreter = tflite.Interpreter(model_path="/home/pi/converted_model.tflite")
     interpreter.allocate_tensors()
@@ -44,9 +46,9 @@ def ml_process(street,i):
     #Log file
     f =  open('/home/pi/waterStressLog.txt','a')
     #f.write(str(currDate)+str(currTime)+ " : " + str(waterStressLevel)+"\n")
-    f.write(street[i] + " : Water Stress Level:" + str(waterStressLevel)+","+str('%.2f'%percentConfident)+"% Confident"+"\n")
+    f.write(f"{imagename} : Water Stress Level:" + str(waterStressLevel)+","+str('%.2f'%percentConfident)+"% Confident"+"\n")
     f.close
-    print(street[i])
+    print(imagename)
     print("Water Stress Level", waterStressLevel)
     print("Percent Confident", '%.2f' % percentConfident)
     return waterStressLevel

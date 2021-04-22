@@ -32,3 +32,4 @@ def api_key_request(namespace,password):
     data = res.read()
     #print(json.loads(data.decode("utf-8"))['ibm_info'])
     return json.loads(data.decode("utf-8"))['ibm_info']
+

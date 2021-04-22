@@ -53,29 +53,36 @@ if __name__ == "__main__":
         print(str(e))         #  printout error message
         exit(1)         # issue occured, program exit
     print("(Press Ctrl+C to disconnect)")
-    street = listdir('/home/pi/images/') #list image name insde "images" folder
-    i=0 # setting i to be the counter referencing most recent picture
+
+    i=2 # setting i to be the counter referencing most recent picture
     
     while True:
+        street = subprocess.run('ls /home/pi/Pictures',shell=True,stdout=subprocess.PIPE, encoding='utf-8') #list image name insde "images" folder
+        street = street.stdout.split('\n')
+        if i != len(street)-1:
+            image_name = street[len(street)-i]
+        else:
+            exit()
         print("taking Image")
         ####Keeping the time updated####
        	currDate = datetime.datetime.now().strftime("%d_%m_%y")
        	currTime = datetime.datetime.now().strftime("%H_%M_%S")
 
         ####capture image function, ref:commands.py####
-        capture_image(currDate,currTime) 
+        #capture_image(currDate,currTime) 
         devices.LogEntry # This is meant to used for debug message from wiotp platform. See reference:"https://ibm-watson-iot.github.io/iot-python/application/api/registry/diag/"
         
         #####invoke ML process#####
-        water_stress_lv=tensor_flow_process.ml_process(street,i)
+        water_stress_lv=tensor_flow_process.ml_process(image_name)
         ###########################
 
         #####Getting wittyPi Temperature#####
         witty_temp = subprocess.run(['sh','get_temp_witty.sh'], stdout = subprocess.PIPE, encoding = 'utf-8')
+        witty_temp = witty_temp.stdout.replace('\n','')
         ####################################
         
         ### invoke method "publish_data" to populate data and format data in a dict format ###
-        camera_data = publish_data(currDate,currTime,water_stress_lv,witty_temp.stdout)
+        camera_data = publish_data(currDate,currTime,water_stress_lv,witty_temp)
 
         ### publish data to wiotp ###
         client.publishEvent('status','json',camera_data)
@@ -96,6 +103,6 @@ if __name__ == "__main__":
         ### Test camera and image setting is changed using website ###
         info = load_file('device','image')
         print(info)
-
+        i=i+1
         ### Have the system publish data on predetermined interval ###
 #        sleep(device_info['statusInterval'])
