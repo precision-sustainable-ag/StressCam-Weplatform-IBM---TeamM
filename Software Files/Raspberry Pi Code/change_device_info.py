@@ -1,6 +1,6 @@
 import json
 
-#read saved device info for value initialization 
+#read saved device info for value initialization
 with open('/home/pi/device_info.json') as init_file:
     data = json.load(init_file)
     init_file.close()
@@ -23,11 +23,11 @@ def read_device_value():
 def read_key_info():
     with open('/home/pi/device_info.json') as init_file:
         data = json.load(init_file)
-        init_file.close()    
+        init_file.close()
     password_info = data['key']
     return password_info
 
-#change device info 
+#change device info
 def change_device_info(**kwargs): #read in dict object
     for keys in kwargs: #iterate over all items inside the dict object
         for key in data['device_info']: # iterate over all items in device_info from device_info.json file
@@ -54,7 +54,7 @@ def change_ibm_info(**kwargs):
 
 #change image info
 #This method follows the same logic as method "change_device_info"
-def change_image_value(**kwargs):    
+def change_image_value(**kwargs):
     for keys in kwargs:
         for key in data['image_value']:
            if keys == key:

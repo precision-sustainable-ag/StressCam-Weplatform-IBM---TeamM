@@ -60,8 +60,10 @@ if __name__ == "__main__":
     while True:
         street = subprocess.run('ls /home/pi/Pictures',shell=True,stdout=subprocess.PIPE, encoding='utf-8') #list image name insde "images" folder
         street = street.stdout.split('\n')
-        image_name = street[len(street)-i]
-
+        if i != len(street)-1:
+            image_name = street[len(street)-i]
+        else:
+            exit()
         print("taking Image")
         ####Keeping the time updated####
        	currDate = datetime.datetime.now().strftime("%d_%m_%y")
@@ -105,6 +107,6 @@ if __name__ == "__main__":
         i=i+1
 
         ###Publish data to DB2###
-        db2_publish.db2_data_publish((camera_data['DEVICE_ID'],camera_data['LATITUDE'],camera_data['LONGITUDE'],camera_data['WATER_STRESS_LEVEL'],camera_data['WITTYPI_TEMPERATURE'],camera_data['CPU_TEMPERATURE'],camera_data['DATE_1'],camera_data['TIME_1']))
+        db2_publish.db2_data_publish(camera_data)
         ### Have the system publish data on predetermined interval ###
 #        sleep(device_info['statusInterval'])

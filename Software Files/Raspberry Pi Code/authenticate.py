@@ -7,8 +7,8 @@
 #IBM web action: "https://cloud.ibm.com/docs/openwhisk?topic=openwhisk-actions_web#http_redirect"
 
 from os import RTLD_DEEPBIND, replace, truncate
-#import re
-#import subprocess
+import re
+import subprocess
 from subprocess import check_output
 import http.client
 import json
@@ -32,4 +32,3 @@ def api_key_request(namespace,password):
     data = res.read()
     #print(json.loads(data.decode("utf-8"))['ibm_info'])
     return json.loads(data.decode("utf-8"))['ibm_info']
-
