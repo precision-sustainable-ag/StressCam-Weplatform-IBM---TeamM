@@ -10,7 +10,7 @@ def db2_data_publish(camera_data):
 #sec = secrect.split("IAM token:  ",1)[1]
 #sec = sec.split("\n",1)[0]
     action_name = 'service_binding'
-    namespace = '107e1420-79c6-4ef3-a4c1-67ce9b57aa36'
+    namespace = 'namespace'
     #   print(key)
     headers = {
         'accept': "application/json",
