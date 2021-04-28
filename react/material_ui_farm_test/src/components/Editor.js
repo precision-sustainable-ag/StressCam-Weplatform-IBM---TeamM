@@ -1,7 +1,8 @@
 import React, { useEffect, useRef } from 'react';
 // import './helpers/iframeLoader.js';
-const currentPage = 'https://dataplatform.cloud.ibm.com/dashboards/5f577fdb-f3ce-4b1b-a56b-df27c8fa66d1/view/022afc2c1c8a33d671f2bde4079825017e3f2155babbd75789867b490d327197f33f1698c82f485fdd475664f7ec1751ce';
+const currentPage = 'https://dataplatform.cloud.ibm.com/dashboards/d1fa6da4-5695-4ccf-ba94-25c8dd714c30/view/7517f10425af22e45fd2b1e4079825017e3f2155babbd75789867b490d327197f33f1698c82f485fdd475664f7ec1751ce';
 
+// cognos dashboard component
 const Editor = () => {
   const iframeRef = useRef();
 

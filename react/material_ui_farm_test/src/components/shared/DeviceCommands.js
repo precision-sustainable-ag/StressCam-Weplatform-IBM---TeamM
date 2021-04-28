@@ -13,6 +13,7 @@ import GetStatus from '../commands/GetStatus'
 import ChangeSchedule from '../commands/ChangeSchedule'
 import ChangeWidth from '../commands/ChangeWidth'
 
+// component which instantiates all commands components
 export default function About() {
     // function handleCamerasCallback(cameras) {
     //     console.log(cameras);

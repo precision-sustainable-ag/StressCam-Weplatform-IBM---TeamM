@@ -10,9 +10,11 @@ import Home from './components/Home'
 import DeviceCommands from './components/shared/DeviceCommands'
 import Jumbotron from './components/shared/Jumbotron'
 
+// main component that instantiates all others
 export default class App extends React.Component {
   render() {
     return (
+      // handles page routing
       <Router>
         <div className="App">
             <Header />

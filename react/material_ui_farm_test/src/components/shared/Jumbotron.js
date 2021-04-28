@@ -25,6 +25,7 @@ const Styles = styled.div`
     }
 `;
 
+// the big picture with "connected farms" text
 export const Jumbotron = () => (
     <Styles>
         <Jumbo fluid className="Jumbo">

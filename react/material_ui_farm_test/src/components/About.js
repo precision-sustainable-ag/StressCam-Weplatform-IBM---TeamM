@@ -1,7 +1,7 @@
 import React from 'react'
 import styled from 'styled-components'
 
-
+// about page component
 export default function About() {
     return (
         <AboutContainer>

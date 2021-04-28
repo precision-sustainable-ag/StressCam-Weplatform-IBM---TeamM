@@ -1,3 +1,4 @@
+// javascript function used to make HTTP calls to node red
 export default async function postData(data, selectedCameras) {
     // Default options are marked with *
     
@@ -14,8 +15,4 @@ export default async function postData(data, selectedCameras) {
         body: JSON.stringify(data) // body data type must match "Content-Type" header
         });
     })
-    
-    // return response.json(); // parses JSON response into native JavaScript objects
-
-    // return response;
 }
