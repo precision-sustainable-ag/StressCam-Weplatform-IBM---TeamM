@@ -26,14 +26,14 @@ path.insert(0,"/usr/local/lib/python3.7/dist-packages/wiotp/sdk/api/registry")
 #### Custom Modules ####
 from commands import capture_image, publish_data, load_file
 from wiotp.sdk.api.registry import devices
-#import hologram_commands 
+import hologram_commands 
 from commandProcessor import commandProcessor
 import tensor_flow_process
 import db2_publish
 #### Custom Modules ####
 
 
-#hologram = hologram_commands.network_connect()
+hologram = hologram_commands.network_connect()
 from wiotp_login import client
 def interruptHandler(signal, frame):
 #    hologram_commands.network_disconnect()
@@ -89,7 +89,7 @@ if __name__ == "__main__":
         client.publishEvent('status','json',camera_data)
 
         ### publish data using hologram webhook ###
-#        hologram_commands.message_publish(hologram, camera_data)
+        hologram_commands.message_publish(hologram, camera_data)
 
         ### write data into a data file ###
         with open('/home/pi/data.txt', 'a') as outfile:

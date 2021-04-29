@@ -1,0 +1,22 @@
+{
+    "device_info": {
+        "deviceId": "0001",
+        "cameraLatitude": "35.763886",
+        "cameraLongitude": "-78.718038",
+        "statusInterval": 720
+    },
+    "key": {
+        "passpharse": {
+            "password": "ConnectedFarms_camera_QC"
+        },
+        "namespace": "Your_cloud_function_name_space; Ref: IBM:cloudFunction-->Actions-->EndPoints"
+    },
+    "image_value": {
+        "imageWidth": 500,
+        "imageHeight": 500,
+        "imageResolutionX": 1296,
+        "imageResolutionY": 730,
+        "imageFormat": ".jpg",
+        "imageFrameRate": 30
+    }
+}

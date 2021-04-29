@@ -64,7 +64,7 @@ def change_resolution(new_x_resolution = image_info['imageResolutionX'],new_y_re
 #This method will change the status update interval.
 def new_interval(interval = device_info["statusInterval"]):
     statusInterval = {
-        "interval":interval # convert received minute interval to seconds
+        "statusInterval":interval # convert received minute interval to seconds
     }
     change_device_info.change_device_info(**statusInterval)
     print("Interval Changed to:", statusInterval,"seconds") # display interval value in seconds

@@ -1,20 +1,15 @@
 from os import RTLD_DEEPBIND, replace, truncate
-#import re
-#import subprocess
 from subprocess import check_output
 import http.client
 import json
-# This method will invoke cloud function to return API key info for cloudant DB
+from change_device_info import read_key_info
+# This method will invoke cloud function to parse Json object for db2 database insertion
 def db2_data_publish(camera_data):
-#secrect= check_output("ibmcloud iam oauth-tokens", shell = True, encoding='utf-8')
-#sec = secrect.split("IAM token:  ",1)[1]
-#sec = sec.split("\n",1)[0]
+    key = read_key_info() #read info from device_info.json; ref "change_device_info.py"
     action_name = 'service_binding'
-    namespace = 'namespace'
-    #   print(key)
+    namespace = key["namespace"]
     headers = {
         'accept': "application/json",
-        #'authorization': sec,
         'content-type': "application/json"
     }
     conn = http.client.HTTPSConnection("us-south.functions.appdomain.cloud")
@@ -23,5 +18,4 @@ def db2_data_publish(camera_data):
 
     res = conn.getresponse()
     data = res.read()
-    #print(json.loads(data.decode("utf-8"))['ibm_info'])
     print(data.decode("utf-8"))
